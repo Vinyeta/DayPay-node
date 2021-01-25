@@ -1,5 +1,5 @@
-const walletModel = require("./users.model"); //CAMBIAR PPR EL MODEL
-
+// const walletModel = require("./users.model"); //CAMBIAR PPR EL MODEL
+const walletModel = require('./wallet.model');
 
 const getOne = async (req, res) => {
   try {

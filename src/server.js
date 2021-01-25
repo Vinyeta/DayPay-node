@@ -4,7 +4,9 @@ const morgan = require('morgan');
 const cors = require('cors');
 const jwt = require('express-jwt');
 const dotenv = require("dotenv");
-const walletRouter = require('./resources/wallet/wallet.router.js')
+const config = require('./config.js');
+const walletRouter = require('./resources/wallet/wallet.router.js');
+const mongo = require("./config/mongo");
 
 
 var path = require('path');
