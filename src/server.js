@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const cors = require('cors');
 const jwt = require('express-jwt');
 const dotenv = require("dotenv");
+const walletRouter = require('./resources/wallet/wallet.router.js')
 
 
 var path = require('path');
@@ -12,6 +13,7 @@ global.appRoot = path.resolve(__dirname);
 const app = express();
 
 app.disable('x-powered-by');
+app.use('/wallet', walletRouter);
 
 app.use(cors());
 app.use(json());
