@@ -42,6 +42,8 @@ const remove = (req, res) => {
 };
 
 const handleTransaction = async (req, res) => {
+  const newTransaction = req.body;
+  const transactionCreated = transactionModel.create(newTransaction);
   const sender = await walletModel.getOne(req.body.sender);
   const receiver = await walletModel.getOne(req.body.receiver);
 
@@ -56,7 +58,7 @@ const handleTransaction = async (req, res) => {
     saldo: sender.saldo - moneyToAddOrSubstract,
   });
 
-  return res.status(200).json({ walletSuma, walletResta });
+  return res.status(200).json({ transactionCreated, walletSuma, walletResta });
 };
 
 module.exports = {
