@@ -52,10 +52,11 @@ const handleTransaction = async (req, res) => {
   });
 
   const walletResta = await walletModel.updateOne(sender, {
+    //lo unico que falta seria crear una nueva transaction cada vez que este metodo se ejecute.
     saldo: sender.saldo - moneyToAddOrSubstract,
   });
 
-  return res.status(200).json({ walletSuma, walletResta }); //Con ID 601461321445540d541ecf05 funciona perfectamente. pero si uso el ID 601461411445540d541ecf06 No suma al primer iD pero si resta al que envia.
+  return res.status(200).json({ walletSuma, walletResta });
 };
 
 module.exports = {
