@@ -73,6 +73,15 @@ const transaction = (id) => {
   );
 };
 
+const getBySender = (walletId) => {
+  let query = { sender: walletId };
+  return Transaction.find(query).sort({ date: -1 });
+};
+const getByReceiver = (walletId) => {
+  let query = { receiver: walletId };
+  return Transaction.find(query).sort({ date: -1 });
+};
+
 module.exports = {
   create,
   update,
@@ -80,4 +89,6 @@ module.exports = {
   get,
   all,
   transaction,
+  getBySender,
+  getByReceiver,
 };

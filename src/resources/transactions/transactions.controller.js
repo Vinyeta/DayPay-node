@@ -54,11 +54,24 @@ const handleTransaction = async (req, res) => {
   });
 
   const walletResta = await walletModel.updateOne(sender, {
-    //lo unico que falta seria crear una nueva transaction cada vez que este metodo se ejecute.
     saldo: sender.saldo - moneyToAddOrSubstract,
   });
 
   return res.status(200).json({ transactionCreated, walletSuma, walletResta });
+};
+
+const getTransactionsBySender = async (req, res) => {
+  const outgoingTransactions = await transactionModel.getBySender(
+    req.params.id
+  );
+  return res.status(200).json(outgoingTransactions);
+};
+
+const getTransactionsByReceiver = async (req, res) => {
+  const incomingTransactions = await transactionModel.getByReceiver(
+    req.params.id
+  );
+  return res.status(200).json(incomingTransactions);
 };
 
 module.exports = {
@@ -68,4 +81,6 @@ module.exports = {
   getOne,
   remove,
   handleTransaction,
+  getTransactionsBySender,
+  getTransactionsByReceiver,
 };
