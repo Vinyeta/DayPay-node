@@ -9,6 +9,9 @@ const walletRouter = require("./resources/wallet/wallet.router.js");
 const mongo = require("./config/mongo");
 const newsletterRouter = require("./resources/newsletter/newsletter.router");
 const transactionRouter = require("./resources/transactions/transactions.router");
+const newsletterRouter = require('./resources/newsletter/newsletter.router');
+const userRouter = require("./resources/users/users.router")
+
 
 var path = require("path");
 global.appRoot = path.resolve(__dirname);
@@ -20,10 +23,14 @@ app.use(json());
 app.use(urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
-app.disable("x-powered-by");
-app.use("/api/wallet", walletRouter);
-app.use("/api/newsletter", newsletterRouter);
+
+app.disable('x-powered-by');
+app.use('/api/wallet', walletRouter);
+app.use('/api/newsletter', newsletterRouter);
+app.use('/api/user', userRouter);
 app.use("/api/transactions", transactionRouter);
+
+
 
 const start = async () => {
   try {
