@@ -49,11 +49,13 @@ const handleTransaction = async (req, res) => {
 
   const moneyToAddOrSubstract = req.body.amount;
 
-  const walletSuma = await walletModel.updateOne(receiver, {
+  const walletSuma = walletModel.updateOne(receiver, {
     saldo: receiver.saldo + moneyToAddOrSubstract,
   });
 
-  const walletResta = await walletModel.updateOne(sender, {
+
+  const walletResta = walletModel.updateOne(sender, {
+    //lo unico que falta seria crear una nueva transaction cada vez que este metodo se ejecute.
     saldo: sender.saldo - moneyToAddOrSubstract,
   });
 
