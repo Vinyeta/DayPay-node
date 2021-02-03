@@ -15,4 +15,8 @@ router
   .delete(transactionController.remove)
   .post(transactionController.handleTransaction);
 
+router.route("/:id/sent").get(transactionController.getTransactionsBySender);
+router
+  .route("/:id/received")
+  .get(transactionController.getTransactionsByReceiver);
 module.exports = router;

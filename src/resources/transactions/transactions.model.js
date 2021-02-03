@@ -39,7 +39,9 @@ const get = async (id) => {
 };
 
 const all = async () => {
-  return await Transaction.find().populate("author", "username");
+  return await Transaction.find()
+    .populate("receiver", "author")
+    .populate("sender", "author");
 };
 
 const remove = (id) => {
@@ -73,6 +75,21 @@ const transaction = (id) => {
   );
 };
 
+const getBySender = (walletId) => {
+  let query = { sender: walletId };
+  return Transaction.find(query)
+    .sort({ date: -1 })
+    .populate("receiver", "author")
+    .populate("sender", "author");
+};
+const getByReceiver = (walletId) => {
+  let query = { receiver: walletId };
+  return Transaction.find(query)
+    .sort({ date: -1 })
+    .populate("receiver", "author")
+    .populate("sender", "author");
+};
+
 module.exports = {
   create,
   update,
@@ -80,4 +97,6 @@ module.exports = {
   get,
   all,
   transaction,
+  getBySender,
+  getByReceiver,
 };
