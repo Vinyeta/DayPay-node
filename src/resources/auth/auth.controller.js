@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const jwt = require('jsonwebtoken');
-//ahun tenemos que importar el userModel
+const userModel = require("../users/users.model")
 
 const login = async(req, res) => {
     const { email, password } = req.body;

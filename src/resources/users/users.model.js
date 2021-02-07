@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 
 const userModelSchema = mongoose.Schema({
-    nombre: String,
-    apellido: String,
-    correoElectronico: String,
+    name: String,
+    surname: String,
+    email: String,
     password: String,
     trustedContacts: Array,
     avatar: String
@@ -18,7 +18,7 @@ const create = (user) => {
         else console.log("Created Docs : ", docs);
     });
 };
-//es con docs?
+
 const get = async (id) => {
     let query = { "_id": id };
     return await User.findOne(query);
@@ -39,6 +39,11 @@ const remove = (id) => {
     });
 };
 
+const getByEmail = async (mail) => {
+    let query = {email: mail};
+    return await User.findOne(query);
+}
+
 const update = (id, updateUser) => {
     let query = { _id: id };
     User.updateOne(query, updateUser, function (err, docs) {
@@ -52,8 +57,9 @@ const update = (id, updateUser) => {
 
 module.exports = {
     create,
-    update,
     remove,
     get,
     getAll,
+    getByEmail,
+    update
 };
