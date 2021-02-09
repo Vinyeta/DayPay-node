@@ -43,23 +43,29 @@ const remove = (req, res) => {
 
 const handleTransaction = async (req, res) => {
   const newTransaction = req.body;
-  const transactionCreated = transactionModel.create(newTransaction);
   const sender = await walletModel.getOne(req.body.sender);
   const receiver = await walletModel.getOne(req.body.receiver);
 
-  const moneyToAddOrSubstract = req.body.amount;
+  const hola = req.params.id; //aqui obtenemos el params para no repetir el getOne req.body.receiver
+  console.log(hola);
 
-  const walletSuma = walletModel.updateOne(receiver, {
-    saldo: receiver.saldo + moneyToAddOrSubstract,
-  });
+  const moneyToAddOrSubstract = req.body.amount; //validar primero si la wallet tiene el dinero que pretende enviar.
+  if (sender.saldo > moneyToAddOrSubstract) {
+    const walletSuma = await walletModel.updateOne(receiver, {
+      saldo: receiver.saldo + moneyToAddOrSubstract,
+    });
 
+    const walletResta = await walletModel.updateOne(sender, {
+      saldo: sender.saldo - moneyToAddOrSubstract,
+    });
+    const transactionCreated = transactionModel.create(newTransaction);
 
-  const walletResta = walletModel.updateOne(sender, {
-    //lo unico que falta seria crear una nueva transaction cada vez que este metodo se ejecute.
-    saldo: sender.saldo - moneyToAddOrSubstract,
-  });
-
-  return res.status(200).json({ transactionCreated, walletSuma, walletResta });
+    return res
+      .status(200)
+      .json({ transactionCreated, walletSuma, walletResta });
+  } else {
+    return res.status(400).json("error: Dinero insuficiente para ser enviado");
+  }
 };
 
 const getTransactionsBySender = async (req, res) => {
@@ -76,6 +82,15 @@ const getTransactionsByReceiver = async (req, res) => {
   return res.status(200).json(incomingTransactions);
 };
 
+const getAllWalletTransactions = async (req, res) => {
+  const incomingTransactions = await transactionModel.getByReceiver(
+    req.params.id
+  );
+  const outgoingTransactions = await transactionModel.getBySender(
+    req.params.id
+  );
+  return res.status(200).json({ incomingTransactions, outgoingTransactions });
+};
 module.exports = {
   create,
   update,
@@ -85,4 +100,5 @@ module.exports = {
   handleTransaction,
   getTransactionsBySender,
   getTransactionsByReceiver,
+  getAllWalletTransactions,
 };

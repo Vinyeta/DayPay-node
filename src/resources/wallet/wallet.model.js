@@ -1,6 +1,7 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 // Define model schema
 const walletModelSchema = mongoose.Schema({
+<<<<<<< HEAD
     author: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'UserModel'
@@ -8,18 +9,23 @@ const walletModelSchema = mongoose.Schema({
     comment: String,
     paymentMethod: Array,
     funds: Number
+=======
+  author: String, //hacer referencia a usermodel.
+  comment: String,
+  paymentMethod: Array, //puede quitarse.
+  saldo: Number, //translate y tener en cuenta que afectara al controller.
+>>>>>>> richard-transactionsQueries
 });
 // Compile model from schema
-const Wallet = mongoose.model('WalletModel', walletModelSchema);
-
+const Wallet = mongoose.model("WalletModel", walletModelSchema);
 
 const create = (wallet) => {
-    console.log(wallet);
+  console.log(wallet);
   Wallet.create(wallet, function (err, docs) {
     if (err) {
       console.log(err);
     } else {
-      console.log('Created Docs : ', docs);
+      console.log("Created Docs : ", docs);
     }
   });
 };
@@ -28,7 +34,7 @@ const getOne = async (id) => {
   return await Wallet.findOne(query);
 };
 const all = async () => {
-  return await Wallet.find().populate('id');
+  return await Wallet.find().populate("id");
 };
 const remove = (id) => {
   let query = { _id: id };
@@ -36,7 +42,7 @@ const remove = (id) => {
     if (err) {
       console.log(err);
     } else {
-      console.log('Deleted Doc : ', docs);
+      console.log("Deleted Doc : ", docs);
     }
   });
 };
@@ -46,7 +52,7 @@ const updateOne = (id, updateWallet) => {
     if (err) {
       console.log(err);
     } else {
-      console.log('Updated Docs : ', docs);
+      console.log("Updated Docs : ", docs);
     }
   });
 };
@@ -62,5 +68,9 @@ module.exports = {
   remove,
   getOne,
   all,
+<<<<<<< HEAD
   getByUser
 };
+=======
+};
+>>>>>>> richard-transactionsQueries
