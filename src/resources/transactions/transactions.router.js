@@ -19,4 +19,7 @@ router.route("/:id/sent").get(transactionController.getTransactionsBySender);
 router
   .route("/:id/received")
   .get(transactionController.getTransactionsByReceiver);
+
+router.route("/:id/all").get(transactionController.getAllWalletTransactions);
+
 module.exports = router;
