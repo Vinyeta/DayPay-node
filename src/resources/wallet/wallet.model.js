@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 // Define model schema
 const walletModelSchema = mongoose.Schema({
-<<<<<<< HEAD
     author: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'UserModel'
@@ -9,12 +8,6 @@ const walletModelSchema = mongoose.Schema({
     comment: String,
     paymentMethod: Array,
     funds: Number
-=======
-  author: String, //hacer referencia a usermodel.
-  comment: String,
-  paymentMethod: Array, //puede quitarse.
-  saldo: Number, //translate y tener en cuenta que afectara al controller.
->>>>>>> richard-transactionsQueries
 });
 // Compile model from schema
 const Wallet = mongoose.model("WalletModel", walletModelSchema);
@@ -68,9 +61,5 @@ module.exports = {
   remove,
   getOne,
   all,
-<<<<<<< HEAD
   getByUser
 };
-=======
-};
->>>>>>> richard-transactionsQueries

@@ -1,5 +1,6 @@
 const transactionModel = require("./transactions.model");
 const walletModel = require("../wallet/wallet.model");
+const userModel = require('../users/users.model');
 
 const e = require("cors");
 
@@ -44,8 +45,8 @@ const remove = (req, res) => {
 const handleTransaction = async (req, res) => {
   const newTransaction = req.body;
   const sender = await walletModel.getOne(req.body.sender);
-  const receiver = await walletModel.getOne(req.body.receiver);
-
+  const targetUser = await  userModel.getByEmail(req.body.receiver);
+  const receiver = await walletModel.getByUser(targetUser._id)
   const hola = req.params.id; //aqui obtenemos el params para no repetir el getOne req.body.receiver
   console.log(hola);
 
