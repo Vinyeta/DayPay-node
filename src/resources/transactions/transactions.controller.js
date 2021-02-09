@@ -43,21 +43,27 @@ const remove = (req, res) => {
 };
 
 const handleTransaction = async (req, res) => {
-  const newTransaction = req.body;
   const sender = await walletModel.getOne(req.body.sender);
   const targetUser = await  userModel.getByEmail(req.body.receiver);
   const receiver = await walletModel.getByUser(targetUser._id)
   const hola = req.params.id; //aqui obtenemos el params para no repetir el getOne req.body.receiver
   console.log(hola);
 
+  const newTransaction = {
+    "sender": req.body.sender,
+    "receiver": receiver._id,
+    "amount": req.body.amount
+  };
+
+
   const moneyToAddOrSubstract = req.body.amount; //validar primero si la wallet tiene el dinero que pretende enviar.
-  if (sender.saldo > moneyToAddOrSubstract) {
+  if (sender.funds >= moneyToAddOrSubstract) {
     const walletSuma = await walletModel.updateOne(receiver, {
-      saldo: receiver.saldo + moneyToAddOrSubstract,
+      funds: receiver.funds + moneyToAddOrSubstract,
     });
 
     const walletResta = await walletModel.updateOne(sender, {
-      saldo: sender.saldo - moneyToAddOrSubstract,
+      funds: sender.funds - moneyToAddOrSubstract,
     });
     const transactionCreated = transactionModel.create(newTransaction);
 
