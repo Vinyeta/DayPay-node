@@ -1,10 +1,13 @@
 const mongoose = require('mongoose');
 // Define model schema
 const walletModelSchema = mongoose.Schema({
-    author: String,
+    author: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'UserModel'
+    },
     comment: String,
     paymentMethod: Array,
-    saldo: Number
+    funds: Number
 });
 // Compile model from schema
 const Wallet = mongoose.model('WalletModel', walletModelSchema);
@@ -47,10 +50,17 @@ const updateOne = (id, updateWallet) => {
     }
   });
 };
+
+const getByUser = async (id) => {
+  let query = { author: id };
+  return await Wallet.findOne(query);
+}
+
 module.exports = {
   create,
   updateOne,
   remove,
   getOne,
   all,
+  getByUser
 };

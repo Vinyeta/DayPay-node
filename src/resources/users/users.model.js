@@ -40,7 +40,7 @@ const remove = (id) => {
 };
 
 const getByEmail = async (mail) => {
-    let query = {email: mail};
+    let query = {"email": mail};
     return await User.findOne(query);
 }
 
