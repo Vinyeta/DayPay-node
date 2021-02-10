@@ -15,12 +15,9 @@ router
 
 router
   .route('/:id/balance')
-  .get(walletController.getBalance);
-  
-  
+    .get(walletController.getBalance)
 
-  .patch(walletController.updateOne)
-router
+  router
   .route('/:id/increment')
   .get(walletController.weeklyIncrement)
 
