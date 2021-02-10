@@ -58,8 +58,8 @@ const weeklyIncrement = async (req, res) => {
   let sum = incomeSum - outcomeSum;
   console.log(sum)
   const lastWeekFunds = currentFunds.funds - sum;
-
-  const increment = sum * 100 / lastWeekFunds;
+  let increment = sum * 100 / lastWeekFunds;
+  increment = increment.toFixed(2);
   return res.status(200).json(increment);
 }
 module.exports = {

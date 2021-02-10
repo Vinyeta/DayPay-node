@@ -100,13 +100,14 @@ const getAllWalletTransactions = async (req, res) => {
   outgoingTransactions.map((e) => e.amount = -e.amount);
 
 
-  const allTransactions = incomingTransactions.concat(outgoingTransactions);
+  let allTransactions = incomingTransactions.concat(outgoingTransactions);
   allTransactions.sort((a, b) => {
     var c = new Date(a.date);
     var d = new Date(b.date);
     return d-c;
   });
 
+  allTransactions = allTransactions.slice(0,10);
  
   return res.status(200).json(allTransactions);
 };
