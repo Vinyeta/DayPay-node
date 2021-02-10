@@ -79,15 +79,11 @@ const getBySender = (walletId) => {
   let query = { sender: walletId };
   return Transaction.find(query)
     .sort({ date: -1 })
-    .populate("receiver", "author")
-    .populate("sender", "author");
 };
 const getByReceiver = (walletId) => {
   let query = { receiver: walletId };
   return Transaction.find(query)
     .sort({ date: -1 })
-    .populate("receiver", "author")
-    .populate("sender", "author"); //popula un campo instanciando la referencia al otro mongo schema con la propiedad existente.
 };
 
 module.exports = {

@@ -79,6 +79,7 @@ const getTransactionsBySender = async (req, res) => {
   const outgoingTransactions = await transactionModel.getBySender(
     req.params.id
   );
+  outgoingTransactions.map((e) => e.amount = -e.amount);
   return res.status(200).json(outgoingTransactions);
 };
 
@@ -96,7 +97,19 @@ const getAllWalletTransactions = async (req, res) => {
   const outgoingTransactions = await transactionModel.getBySender(
     req.params.id
   );
-  return res.status(200).json({ incomingTransactions, outgoingTransactions });
+  outgoingTransactions.map((e) => e.amount = -e.amount);
+
+
+  const allTransactions = incomingTransactions.concat(outgoingTransactions);
+  allTransactions.sort((a, b) => {
+    var c = new Date(a.date);
+    var d = new Date(b.date);
+    return d-c;
+  });
+
+  // allTransactions.slice(0,9);
+ 
+  return res.status(200).json(allTransactions);
 };
 module.exports = {
   create,
