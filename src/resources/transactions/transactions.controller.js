@@ -76,6 +76,23 @@ const getTransactionsByReceiver = async (req, res) => {
   return res.status(200).json(incomingTransactions);
 };
 
+const getBySenderLastWeek = async (req, res) => {
+  try {
+    const outgoingTransactions = await transactionModel.getBySender$DateRange(req.params.id);
+    return res.status(200).json(outgoingTransactions);
+  } catch (error) {
+    console.log(error);
+  }
+}
+const getByReceiverLastWeek = async (req, res) => {
+  try {
+    const ingoingTransactions = await transactionModel.getByReceiver$DateRange(req.params.id);
+    return res.status(200).json(ingoingTransactions);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 module.exports = {
   create,
   update,
@@ -85,4 +102,6 @@ module.exports = {
   handleTransaction,
   getTransactionsBySender,
   getTransactionsByReceiver,
+  getBySenderLastWeek,
+  getByReceiverLastWeek
 };

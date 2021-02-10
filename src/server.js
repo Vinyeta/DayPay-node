@@ -24,7 +24,7 @@ app.use(morgan("dev"));
 app.disable("x-powered-by");
 app.use("/api/wallet", walletRouter);
 app.use("/api/newsletter", newsletterRouter);
-app.use("/api/user", userRouter);
+app.use("/api/users", userRouter);
 app.use("/api/transactions", transactionRouter);
 
 const start = async () => {

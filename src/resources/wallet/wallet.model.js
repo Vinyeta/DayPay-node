@@ -4,11 +4,10 @@ const walletModelSchema = mongoose.Schema({
     author: String,
     comment: String,
     paymentMethod: Array,
-    saldo: Number
+    funds: Number
 });
 // Compile model from schema
 const Wallet = mongoose.model('WalletModel', walletModelSchema);
-
 
 const create = (wallet) => {
     console.log(wallet);

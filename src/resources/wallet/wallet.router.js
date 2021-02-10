@@ -8,7 +8,8 @@ router
   .route('/:id')
   .get(walletController.getOne)
   .patch(walletController.updateOne)
-  
-
+router
+  .route('/:id/increment')
+  .get(walletController.weeklyIncrement)
 
 module.exports = router;
