@@ -1,22 +1,24 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 // Define model schema
 const walletModelSchema = mongoose.Schema({
-    author: String,
+    author: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'UserModel'
+    },
     comment: String,
     paymentMethod: Array,
-    saldo: Number
+    funds: Number
 });
 // Compile model from schema
-const Wallet = mongoose.model('WalletModel', walletModelSchema);
-
+const Wallet = mongoose.model("WalletModel", walletModelSchema);
 
 const create = (wallet) => {
-    console.log(wallet);
+  console.log(wallet);
   Wallet.create(wallet, function (err, docs) {
     if (err) {
       console.log(err);
     } else {
-      console.log('Created Docs : ', docs);
+      console.log("Created Docs : ", docs);
     }
   });
 };
@@ -25,7 +27,7 @@ const getOne = async (id) => {
   return await Wallet.findOne(query);
 };
 const all = async () => {
-  return await Wallet.find().populate('id');
+  return await Wallet.find().populate("id");
 };
 const remove = (id) => {
   let query = { _id: id };
@@ -33,7 +35,7 @@ const remove = (id) => {
     if (err) {
       console.log(err);
     } else {
-      console.log('Deleted Doc : ', docs);
+      console.log("Deleted Doc : ", docs);
     }
   });
 };
@@ -43,14 +45,21 @@ const updateOne = (id, updateWallet) => {
     if (err) {
       console.log(err);
     } else {
-      console.log('Updated Docs : ', docs);
+      console.log("Updated Docs : ", docs);
     }
   });
 };
+
+const getByUser = async (id) => {
+  let query = { author: id };
+  return await Wallet.findOne(query);
+}
+
 module.exports = {
   create,
   updateOne,
   remove,
   getOne,
   all,
+  getByUser
 };

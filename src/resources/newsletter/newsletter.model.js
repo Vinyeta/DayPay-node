@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 // Define model schema
 const newsletterModelSchema = mongoose.Schema({
   email: String,
+  date: { type: Date, default: Date.now },
 });
 
 // Compile model from schema
