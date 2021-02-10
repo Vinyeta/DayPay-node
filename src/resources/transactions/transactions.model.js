@@ -86,6 +86,39 @@ const getByReceiver = (walletId) => {
     .sort({ date: -1 })
 };
 
+const getBySender$DateRange = (walletId) => {
+  const currentDate = new Date();
+  const lastWeek = new Date();
+  lastWeek.setDate(lastWeek.getDate() - 7);
+  let query = {
+    $and: [{ sender: walletId }, {
+      date: {
+        $gte: lastWeek,
+        $lt: currentDate
+      }
+    }
+    ]
+  };
+  return Transaction.find(query)
+    .sort({ date: -1 })
+};
+const getByReceiver$DateRange = (walletId) => {
+  const currentDate = new Date();
+  const lastWeek = new Date();
+  lastWeek.setDate(lastWeek.getDate() - 7);
+  let query = {
+    $and: [{ receiver: walletId }, {
+      date: {
+        $gte: lastWeek,
+        $lt: currentDate
+      }
+    }
+    ]
+  };
+  return Transaction.find(query)
+    .sort({ date: -1 })
+};
+
 module.exports = {
   create,
   update,
@@ -95,4 +128,6 @@ module.exports = {
   transaction,
   getBySender,
   getByReceiver,
+  getBySender$DateRange,
+  getByReceiver$DateRange
 };

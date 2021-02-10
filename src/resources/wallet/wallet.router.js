@@ -19,5 +19,9 @@ router
   
   
 
+  .patch(walletController.updateOne)
+router
+  .route('/:id/increment')
+  .get(walletController.weeklyIncrement)
 
 module.exports = router;
