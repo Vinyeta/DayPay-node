@@ -1,7 +1,6 @@
 const userModel = require("./users.model");
-const e = require("cors");
+const TransactionsModel = require("../transactions/transactions.model");
 
-//que es cors?
 
 const getAll = async (req, res) => {
   const users = await userModel.getAll();
@@ -11,9 +10,16 @@ const get = async (req, res) => {
   const user = await userModel.get(req.params.id);
   return res.status(200).json(user);
 };
-const create = (req, res) => {
+const create = async (req, res) => {
   const newUser = req.body;
-  const userCreated = userModel.create(newUser);
+  const userCreated = await userModel.create(newUser)
+  .then( (response) => {
+    const newUserWallet = {
+    "author": response._id,
+    "funds": 0
+  };
+  const walletCreated = walletModel.create(newUserWallet)})
+  
   return res.status(201).json(userCreated);
 };
 const update = (req, res) => {

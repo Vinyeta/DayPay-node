@@ -27,7 +27,7 @@ const login2 = async (req, res) => {
       res.json({ token: token, user: user });
     }
   } catch (err) {
-    res.status(400).json({});
+    res.status(400).json();
   }
 };
 
