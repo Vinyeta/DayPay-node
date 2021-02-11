@@ -57,6 +57,7 @@ const handleTransaction = async (req, res) => {
 
 
   const moneyToAddOrSubstract = req.body.amount; //validar primero si la wallet tiene el dinero que pretende enviar.
+  
   if (sender.funds >= moneyToAddOrSubstract) {
     const walletSuma = await walletModel.updateOne(receiver, {
       funds: receiver.funds + moneyToAddOrSubstract,

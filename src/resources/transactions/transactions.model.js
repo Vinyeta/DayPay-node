@@ -35,7 +35,7 @@ const create = (transaction) => {
 
 const get = async (id) => {
   let query = { _id: id };
-  return await Transaction.findOne(query).populate("author"); //['firstName', 'email'] para pedir especifciamete esos datos.
+  return await Transaction.findOne(query)//.populate("author"); //['firstName', 'email'] para pedir especifciamete esos datos.
 };
 
 const all = async () => {
