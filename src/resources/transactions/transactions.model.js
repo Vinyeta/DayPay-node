@@ -24,6 +24,7 @@ const Transaction = mongoose.model(
 );
 
 const create = (transaction) => {
+  transaction.amount *= 100;
   Transaction.create(transaction, function (err, docs) {
     if (err) {
       console.log(err);
@@ -119,6 +120,12 @@ const getByReceiver$DateRange = (walletId) => {
     .sort({ date: -1 })
 };
 
+const getTransactionsByWallet = (walletId) => {
+  let query = { $or: [{receiver: walletId}, {sender: walletId}] };
+  return Transaction.find(query)
+    .sort({ date: -1 })
+}
+
 module.exports = {
   create,
   update,
@@ -129,5 +136,6 @@ module.exports = {
   getBySender,
   getByReceiver,
   getBySender$DateRange,
-  getByReceiver$DateRange
+  getByReceiver$DateRange,
+  getTransactionsByWallet
 };

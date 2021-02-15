@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const walletModel = require("../wallet/wallet.model")
 
 const userModelSchema = mongoose.Schema({
   name: String,
@@ -21,10 +22,15 @@ userModelSchema.pre("save", async function (next) {
 const User = mongoose.model("UserModel", userModelSchema);
 
 const create = (user) => {
-  User.create(user, function (err, docs) {
-    if (err) console.log(`error al realizar la petición ${err}`);
-    else console.log("Created Docs : ", docs);
-  });
+  const newUser = new User(user);
+  newUser.save(user, function (err, docs) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("Created Docs : ", docs);
+    }
+  })
+  walletModel.Wallet.create( {"author": newUser._id, "funds":0});
 };
 
 const get = async (id) => {

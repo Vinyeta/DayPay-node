@@ -1,5 +1,4 @@
 const userModel = require("./users.model");
-const TransactionsModel = require("../transactions/transactions.model");
 
 
 const getAll = async (req, res) => {
@@ -10,16 +9,9 @@ const get = async (req, res) => {
   const user = await userModel.get(req.params.id);
   return res.status(200).json(user);
 };
-const create = async (req, res) => {
+const create = (req, res) => {
   const newUser = req.body;
-  const userCreated = await userModel.create(newUser)
-  .then( (response) => {
-    const newUserWallet = {
-    "author": response._id,
-    "funds": 0
-  };
-  const walletCreated = walletModel.create(newUserWallet)})
-  
+  const userCreated = userModel.create(newUser);
   return res.status(201).json(userCreated);
 };
 const update = (req, res) => {
