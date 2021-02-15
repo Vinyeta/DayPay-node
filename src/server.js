@@ -11,7 +11,8 @@ const transactionRouter = require("./resources/transactions/transactions.router"
 const newsletterRouter = require("./resources/newsletter/newsletter.router");
 const userRouter = require("./resources/users/users.router");
 const authRouter = require("./resources/auth/auth.router");
-var path = require("path");
+const requestMoneyRouter = require("./resources/requestMoney/requestMoney.router");
+const path = require("path");
 global.appRoot = path.resolve(__dirname);
 
 const app = express();
@@ -27,6 +28,7 @@ app.use("/api/newsletter", newsletterRouter);
 app.use("/api/users", userRouter);
 app.use("/api/transactions", transactionRouter);
 app.use("/api/login", authRouter);
+app.use("/api/requestMoney", requestMoneyRouter);
 
 const start = async () => {
   try {
