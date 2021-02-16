@@ -23,12 +23,14 @@ app.use(urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
 app.disable("x-powered-by");
-app.use("/api/wallet", walletRouter);
-app.use("/api/newsletter", newsletterRouter);
-app.use("/api/users", userRouter);
-app.use("/api/transactions", transactionRouter);
+app.use("/api/wallet",jwt( { secret: process.env.TOKEN_SECRET, algorithms: ['HS256'] } ), walletRouter);
+app.use("/api/newsletter", jwt( { secret: process.env.TOKEN_SECRET, algorithms: ['HS256'] } ),newsletterRouter);
+app.use("/api/users",jwt( { secret: process.env.TOKEN_SECRET, algorithms: ['HS256'] } ), userRouter);
+app.use("/api/transactions", jwt( { secret: process.env.TOKEN_SECRET, algorithms: ['HS256'] } ), transactionRouter);
 app.use("/api/login", authRouter);
-app.use("/api/requestMoney", requestMoneyRouter);
+app.use("/api/requestMoney",jwt( { secret: process.env.TOKEN_SECRET, algorithms: ['HS256'] } ), requestMoneyRouter);
+
+jwt( { secret: process.env.TOKEN_SECRET, algorithms: ['HS256'] } )
 
 const start = async () => {
   try {
