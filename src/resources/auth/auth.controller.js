@@ -29,7 +29,14 @@ const login2 = async (req, res) => {
   }
 };
 
+const signUp = (req, res) => {
+  const newUser = req.body;
+  const userCreated = userModel.create(newUser);
+  return res.status(201).json(userCreated);
+};
+
 module.exports = {
   // login,
   login2,
+  signUp,
 };

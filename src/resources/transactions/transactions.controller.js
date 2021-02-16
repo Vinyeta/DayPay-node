@@ -1,21 +1,17 @@
 const transactionModel = require("./transactions.model");
 const walletModel = require("../wallet/wallet.model");
 const userModel = require('../users/users.model');
-const { environment } = require("../../config");
 
 
-const CENTS_CONVERTER = 100;
+const getAll = async (req, res) => {
+  const transaction = await transactionModel.all();
 
-// const getAll = async (req, res) => {
-//   const transaction = await transactionModel.all();
-
-//   return res.status(200).json(transaction);
-// };
+  return res.status(200).json(transaction);
+};
 
 const getOne = async (req, res) => {
   const transaction = await transactionModel.get(req.params.id);
   if (transaction) {
-    transaction.amount /= CENTS_CONVERTER;
     return res.status(200).json(transaction);
   }
   return res.status(404).end();
@@ -23,7 +19,6 @@ const getOne = async (req, res) => {
 
 const create = (req, res) => {
   const newTransaction = req.body;
-  newTransaction.amount *= CENTS_CONVERTER;
   const transactionCreated = transactionModel.create(newTransaction);
 
   return res.status(201).json(transactionCreated);
@@ -31,7 +26,6 @@ const create = (req, res) => {
 
 const update = (req, res) => {
   const updateTransaction = req.body;
-  if(updateTransaction.amount)  updateTransaction.amount *= 100;
 
   const transactionUpdated = transactionModel.update(
     req.params.id,
@@ -54,12 +48,10 @@ const handleTransaction = async (req, res) => {
   const hola = req.params.id; //aqui obtenemos el params para no repetir el getOne req.body.receiver
   console.log(hola);
 
-
-
   const newTransaction = {
     "sender": req.body.sender,
     "receiver": receiver._id,
-    "amount": req.body.amount *= 100
+    "amount": req.body.amount
   };
 
 
@@ -139,7 +131,7 @@ const getByReceiverLastWeek = async (req, res) => {
 module.exports = {
   create,
   update,
-  // getAll,
+  getAll,
   getOne,
   remove,
   handleTransaction,

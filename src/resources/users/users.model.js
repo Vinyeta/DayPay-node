@@ -25,9 +25,9 @@ const create = (user) => {
   const newUser = new User(user);
   newUser.save(user, function (err, docs) {
     if (err) {
-      console.log(err);
+      return console.log(err);
     } else {
-      console.log("Created Docs : ", docs);
+       console.log("Created Docs : ", docs);
     }
   })
   walletModel.Wallet.create( {"author": newUser._id, "funds":0});

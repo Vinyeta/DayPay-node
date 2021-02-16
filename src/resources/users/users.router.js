@@ -5,7 +5,6 @@ const router = Router();
 
 router
     .route("/")
-    .post(userController.create)
     // .get(userController.getAll)
 router
     .route('/:id')
