@@ -21,7 +21,7 @@ const getOne = async (req, res) => {
 const create = (req, res) => {
   const newTransaction = req.body;
   const transactionCreated = transactionModel.create(newTransaction);
-
+  
   return res.status(201).json(transactionCreated);
 };
 
@@ -43,6 +43,10 @@ const remove = (req, res) => {
 };
 
 const handleTransaction = async (req, res) => {
+  const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
   const sender = await walletModel.getOne(req.body.sender);
   const targetUser = await  userModel.getByEmail(req.body.receiver);
   const receiver = await walletModel.getByUser(targetUser._id)

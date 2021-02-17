@@ -8,8 +8,12 @@ const get = async (req, res) => {
 const create = (req, res) => {
   const newRequest = req.body;
   const requestCreated = requestMoneyModel.create(newRequest);
-  return res.status(201).json(requestCreated);
-};
+  const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+      return res.status(201).json(requestCreated);
+};    
 const update = (req, res) => {
   const updatedRequest = req.body;
   const requestUpdated = requestMoneyModel.update(req.params.id, updatedRequest);
