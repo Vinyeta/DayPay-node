@@ -1,4 +1,6 @@
 const userModel = require("../users/users.model");
+const jwt = require("jsonwebtoken");
+
 
 // const login = async (req, res) => {
 //   const { email, password } = req.body;
