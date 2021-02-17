@@ -27,7 +27,7 @@ app.use("/api/wallet", walletRouter);
 app.use("/api/newsletter", newsletterRouter);
 app.use("/api/users", userRouter);
 app.use("/api/transactions", transactionRouter);
-app.use("/api/login", authRouter);
+app.use("/api/auth", authRouter);
 app.use("/api/requestMoney", requestMoneyRouter);
 
 const start = async () => {

@@ -24,6 +24,7 @@ const create = (wallet) => {
 };
 const getOne = async (id) => {
   let query = { _id: id };
+  
   return await Wallet.findOne(query);
 };
 const all = async () => {
@@ -61,5 +62,6 @@ module.exports = {
   remove,
   getOne,
   all,
-  getByUser
+  getByUser,
+  Wallet
 };
