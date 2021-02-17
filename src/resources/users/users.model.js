@@ -71,7 +71,8 @@ const update = (id, updateUser) => {
 
 const login = async (email, password) => {
   //buscador de correos y comparador de password normal con la encryptada.
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email: email });
+  console.log(user);
   if (user) {
     const auth = await bcrypt.compare(password, user.password);
     if (auth) {
