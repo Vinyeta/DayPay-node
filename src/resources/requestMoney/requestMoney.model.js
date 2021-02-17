@@ -28,12 +28,7 @@ const requestMoneyModelSchema = mongoose.Schema({
     amount: Number,
   });
  
-  /* const StatusSchema = mongoose.Schema ({
-    transiction: {
-      type: String,
-      enum: Object.values(Transictions),
-    },
-  });*/
+ 
   Object.assign(requestMoneyModelSchema.statics, {
     Transitions,
   });
@@ -45,7 +40,7 @@ const RequestMoney = mongoose.model("RequestMoneyModel", requestMoneyModelSchema
 
 
 const create = (request) => {
-  request.status = "pending";
+  request.status = Transitions.Pending;
   RequestMoney.create(request, function( err, docs) {
       if (err) {
           console.log(err);

@@ -16,19 +16,19 @@ const path = require("path");
 global.appRoot = path.resolve(__dirname);
 
 const app = express();
-
 app.use(cors());
 app.use(json());
 app.use(urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
 app.disable("x-powered-by");
-app.use("/api/wallet", walletRouter);
-app.use("/api/newsletter", newsletterRouter);
-app.use("/api/users", userRouter);
-app.use("/api/transactions", transactionRouter);
+app.use("/api/wallet",jwt( { secret: process.env.TOKEN_SECRET, algorithms: ['HS256'] } ), walletRouter);
+app.use("/api/newsletter", jwt( { secret: process.env.TOKEN_SECRET, algorithms: ['HS256'] } ),newsletterRouter);
+app.use("/api/users",jwt( { secret: process.env.TOKEN_SECRET, algorithms: ['HS256'] } ), userRouter);
+app.use("/api/transactions", jwt( { secret: process.env.TOKEN_SECRET, algorithms: ['HS256'] } ), transactionRouter);
 app.use("/api/auth", authRouter);
-app.use("/api/requestMoney", requestMoneyRouter);
+app.use("/api/requestMoney",jwt( { secret: process.env.TOKEN_SECRET, algorithms: ['HS256'] } ), requestMoneyRouter);
+
 
 const start = async () => {
   try {

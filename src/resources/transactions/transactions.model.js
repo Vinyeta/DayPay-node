@@ -18,10 +18,7 @@ const transactionsModelSchema = mongoose.Schema({
 });
 
 // Compile model from schema
-const Transaction = mongoose.model(
-  "TransactionsModel",
-  transactionsModelSchema
-);
+const Transaction = mongoose.model("TransactionsModel", transactionsModelSchema );
 
 const create = (transaction) => {
   transaction.amount *= 100;
