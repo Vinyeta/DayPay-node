@@ -80,6 +80,7 @@ const getTransactionsBySender = async (req, res) => {
     req.params.id
   );
   outgoingTransactions.map((e) => e.amount = -e.amount);
+  outgoingTransactions.slice(0,10);
   return res.status(200).json(outgoingTransactions);
 };
 
@@ -87,6 +88,7 @@ const getTransactionsByReceiver = async (req, res) => {
   const incomingTransactions = await transactionModel.getByReceiver(
     req.params.id
   );
+  incomingTransactions.slice(0,10);
   return res.status(200).json(incomingTransactions);
 };
 
