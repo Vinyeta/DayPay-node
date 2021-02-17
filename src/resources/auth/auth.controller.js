@@ -1,17 +1,17 @@
-const mongoose = require("mongoose");
-const jwt = require("jsonwebtoken");
 const userModel = require("../users/users.model");
+const jwt = require("jsonwebtoken");
 
-const login = async (req, res) => {
-  const { email, password } = req.body;
-  const user = await userModel.getByEmail(email);
-  if (user.password === password) {
-    const token = jwt.sign({ email: email }, process.env.TOKEN_SECRET);
-    res.json(token);
-  } else {
-    res.status(401).send("Username or password incorrect");
-  }
-};
+
+// const login = async (req, res) => {
+//   const { email, password } = req.body;
+//   const user = await userModel.getByEmail(email);
+//   if (user.password === password) {
+//     const token = jwt.sign({ email: email }, process.env.TOKEN_SECRET);
+//     res.json(token);
+//   } else {
+//     res.status(401).send("Username or password incorrect");
+//   }
+// };
 
 const login2 = async (req, res) => {
   const { email, password } = req.body;
@@ -27,11 +27,18 @@ const login2 = async (req, res) => {
       res.json({ token: token, user: user });
     }
   } catch (err) {
-    res.status(400).json({});
+    res.status(400).json();
   }
 };
 
+const signUp = (req, res) => {
+  const newUser = req.body;
+  const userCreated = userModel.create(newUser);
+  return res.status(201).json(userCreated);
+};
+
 module.exports = {
-  login,
+  // login,
   login2,
+  signUp,
 };

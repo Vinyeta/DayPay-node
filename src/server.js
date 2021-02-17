@@ -26,10 +26,9 @@ app.use("/api/wallet",jwt( { secret: process.env.TOKEN_SECRET, algorithms: ['HS2
 app.use("/api/newsletter", jwt( { secret: process.env.TOKEN_SECRET, algorithms: ['HS256'] } ),newsletterRouter);
 app.use("/api/users",jwt( { secret: process.env.TOKEN_SECRET, algorithms: ['HS256'] } ), userRouter);
 app.use("/api/transactions", jwt( { secret: process.env.TOKEN_SECRET, algorithms: ['HS256'] } ), transactionRouter);
-app.use("/api/login", authRouter);
+app.use("/api/auth", authRouter);
 app.use("/api/requestMoney",jwt( { secret: process.env.TOKEN_SECRET, algorithms: ['HS256'] } ), requestMoneyRouter);
 
-jwt( { secret: process.env.TOKEN_SECRET, algorithms: ['HS256'] } )
 
 const start = async () => {
   try {
