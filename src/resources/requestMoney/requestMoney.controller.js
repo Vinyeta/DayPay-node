@@ -1,5 +1,7 @@
 const requestMoneyModel = require("./requestMoney.model");
 const { validationResult } = require('express-validator');
+const userModel = require('../users/users.model');
+const walletModel = require('../wallet/wallet.model');
 
 
 
@@ -7,8 +9,14 @@ const get = async (req, res) => {
   const request = await requestMoneyModel.get(req.params.id);
   return res.status(200).json(request);
 };
-const create = (req, res) => {
-  const newRequest = req.body;
+const create = async (req, res) => {
+  const targetUser = await  userModel.getByEmail(req.body.receiver);
+  const receiver = await walletModel.getByUser(targetUser._id)
+  const newRequest = {
+    "sender": req.body.sender,
+    "receiver": receiver._id,
+    "amount": req.body.amount
+  };
   const requestCreated = requestMoneyModel.create(newRequest);
   const errors = validationResult(req);
     if (!errors.isEmpty()) {
