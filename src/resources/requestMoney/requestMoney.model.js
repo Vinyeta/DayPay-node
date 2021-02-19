@@ -63,11 +63,17 @@ const update = (id, request) => {
 
 const get = async (id) => {
 let query ={_id: id};
-return await RequestMoney.findOne(query)
+return await RequestMoney.findOne(query);
 };
+
+const getByWallet = async (id) => {
+  let query = { receiver: id};
+  return await RequestMoney.findOne(query);
+}
 
 module.exports = {
   create,
   update,
-  get
+  get,
+  getByWallet
 };
