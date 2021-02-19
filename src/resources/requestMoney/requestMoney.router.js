@@ -17,5 +17,9 @@ router
     .route('/:id')
     .get(requestMoneyController.get)
     .patch(requestMoneyController.update)
+
+router  
+    .route('/:id/user')
+    .get(requestMoneyController.getByUser);
     
 module.exports = router;

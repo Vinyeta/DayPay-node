@@ -35,11 +35,18 @@ const update = (req, res) => {
   return res.status(200).json(requestUpdated);
 };
 
+const getByUser = async (req, res) => {
+  const user = await userModel.get(req.params.id);
+  const wallet = await walletModel.getByUser(user._id);
+  const request = await requestMoneyModel.getByWallet(wallet._id);
+  return res.status(200).json(request);
+};
 
 module.exports = {
   create,
   update,
-  get
+  get,
+  getByUser
 };
 
 
