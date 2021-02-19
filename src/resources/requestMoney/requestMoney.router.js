@@ -1,15 +1,16 @@
 const { Router } = require("express");
 const requestMoneyController = require("./requestMoney.controller");
-const { body, validationResult } = require('express-validator');
+const { body } = require('express-validator');
 
 
 const router = Router();
 
 
+
 router.route('/')
-  .get(usersController.getAll)
   .post( body('email').isEmail(),
-          usersController.create,
+        body('amount').isNumeric(),
+            requestMoneyController.create,
       );
 
 router

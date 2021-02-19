@@ -1,22 +1,28 @@
 const { Router } = require("express");
 const transactionController = require("./transactions.controller");
-const { body, validationResult } = require('express-validator');
+const { body } = require('express-validator');
 
 const router = Router();
 
 router.route('/')
-  .get(usersController.getAll)
-  .post(  body('password').isLength({min: 5 }),
+  .post(  body('amount').isNumeric(),
           body('email').isEmail(),
-          usersController.create,
-      );
+          (transactionController.handleTransaction)
+      )
 
-router
-  .route("/:id")
-  .get(transactionController.getOne)
-  .patch(transactionController.update)
-  .delete(transactionController.remove)
-  .post(transactionController.handleTransaction);
+
+// router
+//   .route("/:id")
+  // .get(transactionController.getOne)
+  // .patch(transactionController.update)
+  // .delete(transactionController.remove)
+
+
+// router
+//   .route("/:id")
+//   .get(transactionController.getOne)
+//   .patch(transactionController.update)
+//   .delete(transactionController.remove)
 
 router.route("/:id/sent").get(transactionController.getTransactionsBySender);
 router

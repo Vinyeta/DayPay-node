@@ -1,4 +1,6 @@
 const requestMoneyModel = require("./requestMoney.model");
+const { validationResult } = require('express-validator');
+
 
 
 const get = async (req, res) => {
@@ -12,6 +14,11 @@ const create = (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    value = req.body.amount
+      value >= 0;
+      if (value < 0 ) {
+          return res.status(400).json("Invalid value");
+        }
       return res.status(201).json(requestCreated);
 };    
 const update = (req, res) => {
