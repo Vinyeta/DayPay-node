@@ -1,5 +1,7 @@
 const userModel = require("../users/users.model");
 const jwt = require("jsonwebtoken");
+const { validationResult } = require('express-validator');
+
 
 
 // const login = async (req, res) => {
@@ -32,6 +34,10 @@ const login2 = async (req, res) => {
 };
 
 const signUp = (req, res) => {
+  const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
   const newUser = req.body;
   const userCreated = userModel.create(newUser);
   return res.status(201).json(userCreated);

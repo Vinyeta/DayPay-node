@@ -1,13 +1,21 @@
 const { Router } = require("express");
 const transactionController = require("./transactions.controller");
+const { body } = require('express-validator');
 
 const router = Router();
 
-router
-  .route("/")
-  // .get(transactionController.getAll)
-  // .post(transactionController.create)
-  .post(transactionController.handleTransaction);
+router.route('/')
+  .post(  body('amount').isNumeric(),
+          body('email').isEmail(),
+          (transactionController.handleTransaction)
+      )
+
+
+// router
+//   .route("/:id")
+  // .get(transactionController.getOne)
+  // .patch(transactionController.update)
+  // .delete(transactionController.remove)
 
 
 // router

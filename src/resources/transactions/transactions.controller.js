@@ -1,6 +1,8 @@
 const transactionModel = require("./transactions.model");
 const walletModel = require("../wallet/wallet.model");
 const userModel = require('../users/users.model');
+const { validationResult } = require('express-validator');
+
 
 
 const getAll = async (req, res) => {
@@ -20,7 +22,7 @@ const getOne = async (req, res) => {
 const create = (req, res) => {
   const newTransaction = req.body;
   const transactionCreated = transactionModel.create(newTransaction);
-
+  
   return res.status(201).json(transactionCreated);
 };
 
@@ -42,11 +44,18 @@ const remove = (req, res) => {
 };
 
 const handleTransaction = async (req, res) => {
+  const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    value = req.body.amount
+    value >= 0;
+    if (value < 0 ) {
+        return res.status(400).json("Invalid value");
+      }
   const sender = await walletModel.getOne(req.body.sender);
   const targetUser = await  userModel.getByEmail(req.body.receiver);
   const receiver = await walletModel.getByUser(targetUser._id)
-  const hola = req.params.id; //aqui obtenemos el params para no repetir el getOne req.body.receiver
-  console.log(hola);
 
   const newTransaction = {
     "sender": req.body.sender,
