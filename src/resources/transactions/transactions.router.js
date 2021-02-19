@@ -5,15 +5,16 @@ const router = Router();
 
 router
   .route("/")
-  .get(transactionController.getAll)
-  .post(transactionController.create);
-
-router
-  .route("/:id")
-  .get(transactionController.getOne)
-  .patch(transactionController.update)
-  .delete(transactionController.remove)
+  // .get(transactionController.getAll)
+  // .post(transactionController.create)
   .post(transactionController.handleTransaction);
+
+
+// router
+//   .route("/:id")
+//   .get(transactionController.getOne)
+//   .patch(transactionController.update)
+//   .delete(transactionController.remove)
 
 router.route("/:id/sent").get(transactionController.getTransactionsBySender);
 router
