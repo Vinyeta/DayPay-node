@@ -23,7 +23,7 @@ const login2 = async (req, res) => {
     console.log(user);
     if (user) {
       const token = jwt.sign(
-        { email: email, role: "admin" },
+        { _id: user._id, role: "admin" },
         process.env.TOKEN_SECRET
       );
       res.json({ token: token, user: user });
