@@ -8,7 +8,7 @@ const router = Router();
 
 
 router.route('/')
-  .post( body('email').isEmail(),
+  .post( body('receiver').isEmail(),
         body('amount').isNumeric(),
             requestMoneyController.create,
       );
