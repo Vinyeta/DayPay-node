@@ -6,7 +6,7 @@ const router = Router();
 
 router.route('/')
   .post(  body('amount').isNumeric(),
-          body('email').isEmail(),
+          body('receiver').isEmail(),
           (transactionController.handleTransaction)
       )
 
