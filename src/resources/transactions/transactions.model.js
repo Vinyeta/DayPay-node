@@ -18,10 +18,12 @@ const transactionsModelSchema = mongoose.Schema({
 });
 
 // Compile model from schema
-const Transaction = mongoose.model("TransactionsModel", transactionsModelSchema );
+const Transaction = mongoose.model(
+  "TransactionsModel",
+  transactionsModelSchema
+);
 
 const create = (transaction) => {
-  transaction.amount *= 100;
   Transaction.create(transaction, function (err, docs) {
     if (err) {
       console.log(err);
@@ -33,7 +35,7 @@ const create = (transaction) => {
 
 const get = async (id) => {
   let query = { _id: id };
-  return await Transaction.findOne(query)//.populate("author"); //['firstName', 'email'] para pedir especifciamete esos datos.
+  return await Transaction.findOne(query).populate("author"); //['firstName', 'email'] para pedir especifciamete esos datos.
 };
 
 const all = async () => {
@@ -117,12 +119,6 @@ const getByReceiver$DateRange = (walletId) => {
     .sort({ date: -1 })
 };
 
-const getTransactionsByWallet = (walletId) => {
-  let query = { $or: [{receiver: walletId}, {sender: walletId}] };
-  return Transaction.find(query)
-    .sort({ date: -1 })
-}
-
 module.exports = {
   create,
   update,
@@ -133,6 +129,5 @@ module.exports = {
   getBySender,
   getByReceiver,
   getBySender$DateRange,
-  getByReceiver$DateRange,
-  getTransactionsByWallet
+  getByReceiver$DateRange
 };

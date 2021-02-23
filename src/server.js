@@ -11,12 +11,10 @@ const transactionRouter = require("./resources/transactions/transactions.router"
 const newsletterRouter = require("./resources/newsletter/newsletter.router");
 const userRouter = require("./resources/users/users.router");
 const authRouter = require("./resources/auth/auth.router");
-const requestMoneyRouter = require("./resources/requestMoney/requestMoney.router");
-const path = require("path");
+var path = require("path");
 global.appRoot = path.resolve(__dirname);
 
 const app = express();
-const jwtProtection = jwt( { secret: process.env.TOKEN_SECRET, algorithms: ['HS256'] } );
 
 app.use(cors());
 app.use(json());
@@ -24,13 +22,11 @@ app.use(urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
 app.disable("x-powered-by");
-app.use("/api/auth", authRouter);
-app.use("/api/wallet", jwtProtection, walletRouter);
-app.use("/api/newsletter", jwtProtection, newsletterRouter);
-app.use("/api/users", jwtProtection, userRouter);
-app.use("/api/transactions", jwtProtection, transactionRouter);
-app.use("/api/requestMoney", jwtProtection, requestMoneyRouter);
-
+app.use("/api/wallet", walletRouter);
+app.use("/api/newsletter", newsletterRouter);
+app.use("/api/users", userRouter);
+app.use("/api/transactions", transactionRouter);
+app.use("/api/login", authRouter);
 
 const start = async () => {
   try {
