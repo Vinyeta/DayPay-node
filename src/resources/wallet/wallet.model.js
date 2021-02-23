@@ -63,5 +63,4 @@ module.exports = {
   getOne,
   all,
   getByUser,
-  Wallet
 };

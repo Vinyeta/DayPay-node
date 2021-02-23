@@ -16,18 +16,20 @@ const path = require("path");
 global.appRoot = path.resolve(__dirname);
 
 const app = express();
+const jwtProtection = jwt( { secret: process.env.TOKEN_SECRET, algorithms: ['HS256'] } );
+
 app.use(cors());
 app.use(json());
 app.use(urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
 app.disable("x-powered-by");
-app.use("/api/wallet",jwt( { secret: process.env.TOKEN_SECRET, algorithms: ['HS256'] } ), walletRouter);
-app.use("/api/newsletter", jwt( { secret: process.env.TOKEN_SECRET, algorithms: ['HS256'] } ),newsletterRouter);
-app.use("/api/users",jwt( { secret: process.env.TOKEN_SECRET, algorithms: ['HS256'] } ), userRouter);
-app.use("/api/transactions", jwt( { secret: process.env.TOKEN_SECRET, algorithms: ['HS256'] } ), transactionRouter);
 app.use("/api/auth", authRouter);
-app.use("/api/requestMoney",jwt( { secret: process.env.TOKEN_SECRET, algorithms: ['HS256'] } ), requestMoneyRouter);
+app.use("/api/wallet", jwtProtection, walletRouter);
+app.use("/api/newsletter", jwtProtection, newsletterRouter);
+app.use("/api/users", jwtProtection, userRouter);
+app.use("/api/transactions", jwtProtection, transactionRouter);
+app.use("/api/requestMoney", jwtProtection, requestMoneyRouter);
 
 
 const start = async () => {
