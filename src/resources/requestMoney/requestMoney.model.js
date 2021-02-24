@@ -68,7 +68,14 @@ return await RequestMoney.findOne(query);
 
 const getByWallet = async (id) => {
   let query = { receiver: id};
-  return await RequestMoney.findOne(query);
+  return await RequestMoney.find(query)
+    .populate({
+      path:'sender',
+      populate: { path: 'author' } })
+    .populate({
+      path: 'receiver',
+      populate: { path: 'author' } })
+    .sort({date: -1});  
 }
 
 module.exports = {
