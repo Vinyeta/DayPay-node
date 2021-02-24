@@ -21,7 +21,6 @@ const transactionsModelSchema = mongoose.Schema({
 const Transaction = mongoose.model("TransactionsModel", transactionsModelSchema );
 
 const create = (transaction) => {
-  transaction.amount *= 100;
   Transaction.create(transaction, function (err, docs) {
     if (err) {
       console.log(err);
