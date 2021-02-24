@@ -46,20 +46,24 @@ const weeklyIncrement = async (req, res) => {
   const currentFunds = await walletModel.getOne({ _id: req.params.id });
   const outcomeTransactions = await TransactionsModel.getBySender$DateRange(req.params.id)
   const incomeTransactions = await TransactionsModel.getByReceiver$DateRange(req.params.id)
-  console.log(currentFunds);
+  console.log(currentFunds.funds);
   let outcomeSum = 0;
+  console.log(outcomeTransactions)
   outcomeTransactions.forEach(element => {
     outcomeSum += element.amount
   });
   let incomeSum = 0;
+  console.log(incomeTransactions);
   incomeTransactions.forEach(element => {
     incomeSum += element.amount
   });
   let sum = incomeSum - outcomeSum;
-  console.log(sum)
+  console.log(sum);
   const lastWeekFunds = currentFunds.funds - sum;
+  console.log(lastWeekFunds);
   let increment = sum * 100 / lastWeekFunds;
   increment = increment.toFixed(2);
+  console.log(increment);
   return res.status(200).json(increment);
 }
 module.exports = {
