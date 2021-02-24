@@ -26,7 +26,7 @@ app.use(morgan("dev"));
 app.disable("x-powered-by");
 app.use("/api/auth", authRouter);
 app.use("/api/wallet", jwtProtection, walletRouter);
-app.use("/api/newsletter", newsletterRouter);
+app.use("/api/newsletter", jwtProtection, newsletterRouter);
 app.use("/api/users", jwtProtection, userRouter);
 app.use("/api/transactions", jwtProtection, transactionRouter);
 app.use("/api/requestMoney", jwtProtection, requestMoneyRouter);
