@@ -48,7 +48,9 @@ const handleTransaction = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    if (req.body.amount < 0 ) {
+    value = req.body.amount
+    value >= 0;
+    if (value < 0 ) {
         return res.status(400).json("Invalid value");
       }
   const sender = await walletModel.getOne(req.body.sender);
@@ -60,7 +62,7 @@ const handleTransaction = async (req, res) => {
     "receiver": receiver._id,
     "amount": req.body.amount
   };
-  console.log(req.body.amount);
+
 
   const moneyToAddOrSubstract = req.body.amount; //validar primero si la wallet tiene el dinero que pretende enviar.
   
@@ -72,7 +74,6 @@ const handleTransaction = async (req, res) => {
     const walletResta = await walletModel.updateOne(sender, {
       funds: sender.funds - moneyToAddOrSubstract,
     });
-    console.log(newTransaction)
     const transactionCreated = transactionModel.create(newTransaction);
 
     return res
