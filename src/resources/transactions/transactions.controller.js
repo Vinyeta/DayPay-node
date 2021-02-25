@@ -77,7 +77,11 @@ const getTransactionsBySender = async (req, res) => {
   const outgoingTransactions = await transactionModel.getBySender(
     req.params.id
   );
-  outgoingTransactions.map((e) => e.amount = -e.amount);
+  outgoingTransactions.map((e) =>{
+    const amountValue = currency.EURO(e.amount).value;
+    console.log(currency.EURO(amountValue))
+    e.amount = currency.EURO(-amountValue).format();
+  }); 
   outgoingTransactions.slice(0,10);
   return res.status(200).json(outgoingTransactions);
 };

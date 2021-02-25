@@ -64,7 +64,7 @@ const weeklyIncrement = async (req, res) => {
     incomeSum = currency.EURO(element.amount).add(incomeSum);
   });
   let sum = currency.EURO(incomeSum).subtract(outcomeSum);
-  const lastWeekFunds = currency.EURO(currentFunds.funds).substract(sum);
+  const lastWeekFunds = currency.EURO(currentFunds.funds).subtract(sum);
   let increment = currency.EURO(sum).value * 100 / currency.EURO(lastWeekFunds).value
   return res.status(200).json(increment);
 }
