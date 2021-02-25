@@ -25,7 +25,7 @@ const requestMoneyModelSchema = mongoose.Schema({
     },
     concept: String,
     date: { type: Date, default: Date.now },
-    amount: Number,
+    amount: String,
   });
  
  

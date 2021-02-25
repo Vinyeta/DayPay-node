@@ -1,5 +1,8 @@
 const walletModel = require('./wallet.model');
 const TransactionsModel = require('../transactions/transactions.model');
+const currency = require("../../Utils/moneyFormating");
+
+
 
 const getOne = async (req, res) => {
   try {
@@ -13,12 +16,18 @@ const getOne = async (req, res) => {
 
 const createOne = (req, res) => {
   const newWallet = req.body;
+  newWallet.funds = currency.EURO(newWallet.funds).format();
   const walletUpdated = walletModel.create(newWallet)
   res.status(201).json(walletUpdated)
 };
 
 const updateOne = (req, res) => {
-  const wallet = walletModel.updateOne(req.params.id, req.body);
+  const updatedBody = {
+    "comment" : req.body.comment,
+    "paymentMethod": req.body.paymentMethod,
+    "funds": currency.EURO(req.body.funds).format()
+  }
+  const wallet = walletModel.updateOne(req.params.id, updatedBody);
   return res.status(200).json(wallet);
 };
 
@@ -46,24 +55,17 @@ const weeklyIncrement = async (req, res) => {
   const currentFunds = await walletModel.getOne({ _id: req.params.id });
   const outcomeTransactions = await TransactionsModel.getBySender$DateRange(req.params.id)
   const incomeTransactions = await TransactionsModel.getByReceiver$DateRange(req.params.id)
-  console.log(currentFunds.funds);
-  let outcomeSum = 0;
-  console.log(outcomeTransactions)
+  let outcomeSum = currency.EURO(0);
   outcomeTransactions.forEach(element => {
-    outcomeSum += element.amount
+    outcomeSum = currency.EURO(element.amount).add(outcomeSum);
   });
-  let incomeSum = 0;
-  console.log(incomeTransactions);
+  let incomeSum = currency.EURO(0);
   incomeTransactions.forEach(element => {
-    incomeSum += element.amount
+    incomeSum = currency.EURO(element.amount).add(incomeSum);
   });
-  let sum = incomeSum - outcomeSum;
-  console.log(sum);
-  const lastWeekFunds = currentFunds.funds - sum;
-  console.log(lastWeekFunds);
-  let increment = sum * 100 / lastWeekFunds;
-  increment = increment.toFixed(2);
-  console.log(increment);
+  let sum = currency.EURO(incomeSum).subtract(outcomeSum);
+  const lastWeekFunds = currency.EURO(currentFunds.funds).substract(sum);
+  let increment = currency.EURO(sum).value * 100 / currency.EURO(lastWeekFunds).value
   return res.status(200).json(increment);
 }
 module.exports = {

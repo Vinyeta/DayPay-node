@@ -2,7 +2,7 @@ const requestMoneyModel = require("./requestMoney.model");
 const { validationResult } = require('express-validator');
 const userModel = require('../users/users.model');
 const walletModel = require('../wallet/wallet.model');
-
+const currency = require("../../Utils/moneyFormating");
 
 
 const get = async (req, res) => {
@@ -23,7 +23,7 @@ const create = async (req, res) => {
   const newRequest = {
     "sender": req.body.sender,
     "receiver": receiver._id,
-    "amount": req.body.amount
+    "amount": currency.EURO(req.body.amount).format()
   };
   const requestCreated = requestMoneyModel.create(newRequest);
   return res.status(201).json(requestCreated);
