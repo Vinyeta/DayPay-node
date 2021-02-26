@@ -5,11 +5,12 @@ const router = Router();
 
 router
     .route("/")
-    // .get(userController.getAll)
+    .post(userController.create)
+    .get(userController.getAll)
 router
     .route('/:id')
     .get(userController.get)
-    // .delete(userController.remove)
+    .delete(userController.remove)
     .patch(userController.update)
     
 module.exports = router;

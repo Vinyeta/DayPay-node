@@ -1,5 +1,6 @@
 const newsletterModel = require("./newsletter.model");
 
+const e = require("cors");
 
 const getAll = async (req, res) => {
   const newsletter = await newsletterModel.all();
