@@ -14,7 +14,7 @@ const transactionsModelSchema = mongoose.Schema({
   },
   concept: String,
   date: { type: Date, default: Date.now },
-  amount: Number,
+  amount: String,
 });
 
 // Compile model from schema
@@ -67,7 +67,7 @@ const transaction = (id) => {
   let query = { _id: id };
   return walletModel.findOneAndUpdate(
     { query },
-    { saldo: saldo },
+    { funds: funds },
     { new: true }
   );
 };

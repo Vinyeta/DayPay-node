@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const walletModel = require("../wallet/wallet.model")
+const currency= require("../../Utils/moneyFormating");
+
 
 const userModelSchema = mongoose.Schema({
   name: String,
@@ -30,7 +32,7 @@ const create = (user) => {
        console.log("Created Docs : ", docs);
     }
   })
-  walletModel.Wallet.create( {"author": newUser._id, "funds":0});
+  walletModel.Wallet.create( {"author": newUser._id, "funds":currency.EURO(0).format()});
 };
 
 const get = async (id) => {
@@ -58,8 +60,10 @@ const getByEmail = async (mail) => {
   return await User.findOne(query);
 };
 
-const update = (id, updateUser) => {
+const update = async (id, updateUser) => {
   let query = { _id: id };
+  const salt = await bcrypt.genSalt();
+  updateUser.password = await bcrypt.hash(updateUser.password, salt);
   User.updateOne(query, updateUser, function (err, docs) {
     if (err) {
       console.log(`error al realizar la petición ${err}`);

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 // Define model schema
 const walletModelSchema = mongoose.Schema({
     author: {
@@ -7,7 +8,7 @@ const walletModelSchema = mongoose.Schema({
     },
     comment: String,
     paymentMethod: Array,
-    funds: Number
+    funds: String
 });
 // Compile model from schema
 const Wallet = mongoose.model("WalletModel", walletModelSchema);
