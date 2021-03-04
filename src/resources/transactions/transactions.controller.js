@@ -49,6 +49,8 @@ const handleTransaction = async (req, res) => {
   const targetUser = await  userModel.getByEmail(req.body.receiver);
   const receiver = await walletModel.getByUser(targetUser._id)
 
+  if (req.body.sender === receiver._id) return res.status(400).json('Cannot send money to yourself')
+
   const newTransaction = {
     "sender": req.body.sender,
     "receiver": receiver._id,

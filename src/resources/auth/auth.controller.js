@@ -39,6 +39,7 @@ const signUp = (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+  if (userModel.getByEmail(req.body.email)) return res.status(400).json('User already exists')
   const newUser = req.body;
   const userCreated = userModel.create(newUser);
   return res.status(201).json(userCreated);
