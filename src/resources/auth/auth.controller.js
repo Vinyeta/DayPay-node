@@ -1,6 +1,10 @@
 const userModel = require("../users/users.model");
 const jwt = require("jsonwebtoken");
+const sgMail = require('@sendgrid/mail')
 const { validationResult } = require('express-validator');
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+
 
 
 
@@ -41,6 +45,21 @@ const signUp = (req, res) => {
     }
   const newUser = req.body;
   const userCreated = userModel.create(newUser);
+  const msg = {
+    to: newUser.email, // Change to your recipient
+    from: "avinetam@gmail.com", // Change to your verified sender
+    subject: 'Welcome to DayPay',
+    text: `Welcome to DayPay ${newUser.name} ${newUser.surname}, start sending money to your acquaintance instantly!`,
+    html: `<strong>Welcome to DayPay ${newUser.name} ${newUser.surname}, start sending money to your acquaintance instantly!</strong>`,
+  }
+  sgMail
+    .send(msg)
+    .then(() => {
+      console.log('Email sent')
+    })
+    .catch((error) => {
+      console.error(error)
+    });
   return res.status(201).json(userCreated);
 };
 
