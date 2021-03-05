@@ -5,13 +5,13 @@ const router = Router();
 
 router
   .route("/")
-//   .get(newsletterController.getAll)
+  .get(newsletterController.getAll)
   .post(newsletterController.create);
 
-// router
-//   .route("/:id")
-//   .get(newsletterController.getOne)
-//   .patch(newsletterController.update)
-//   .delete(newsletterController.remove);
+router
+  .route("/:id")
+  .get(newsletterController.getOne)
+  .patch(newsletterController.update)
+  .delete(newsletterController.remove);
 
 module.exports = router;

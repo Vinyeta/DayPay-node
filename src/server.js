@@ -17,11 +17,15 @@ global.appRoot = path.resolve(__dirname);
 
 const app = express();
 const jwtProtection = jwt( { secret: process.env.TOKEN_SECRET, algorithms: ['HS256'] } );
+const stripe = require("stripe")("sk_test_4eC39HqLyjWDarjtT1zdp7dc");
+
 
 app.use(cors());
 app.use(json());
 app.use(urlencoded({ extended: true }));
 app.use(morgan("dev"));
+app.use(express.static("."));
+
 
 app.disable("x-powered-by");
 app.use("/api/auth", authRouter);
@@ -30,6 +34,18 @@ app.use("/api/newsletter", newsletterRouter);
 app.use("/api/users", jwtProtection, userRouter);
 app.use("/api/transactions", jwtProtection, transactionRouter);
 app.use("/api/requestMoney", jwtProtection, requestMoneyRouter);
+
+
+
+app.post("/create-payment-intent", async (req, res) => {
+  
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: req.body.amount,
+    description: req.body.walletId,
+    currency: "eur"
+  });
+  res.send(paymentIntent);
+});
 
 
 const start = async () => {
