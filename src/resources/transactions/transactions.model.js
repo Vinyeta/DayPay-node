@@ -21,6 +21,7 @@ const transactionsModelSchema = mongoose.Schema({
 const Transaction = mongoose.model("TransactionsModel", transactionsModelSchema );
 
 const create = (transaction) => {
+  
   Transaction.create(transaction, function (err, docs) {
     if (err) {
       console.log(err);
@@ -75,11 +76,20 @@ const transaction = (id) => {
 const getBySender = (walletId) => {
   let query = { sender: walletId };
   return Transaction.find(query)
+  .populate ({
+    path:"receiver",
+    populate: { path: "author"}
+  })
     .sort({ date: -1 })
 };
 const getByReceiver = (walletId) => {
   let query = { receiver: walletId };
   return Transaction.find(query)
+  .populate ({
+    path: "sender",
+    populate: { path: "author"}
+  })
+
     .sort({ date: -1 })
 };
 
