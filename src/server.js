@@ -12,12 +12,13 @@ const newsletterRouter = require("./resources/newsletter/newsletter.router");
 const userRouter = require("./resources/users/users.router");
 const authRouter = require("./resources/auth/auth.router");
 const requestMoneyRouter = require("./resources/requestMoney/requestMoney.router");
+const stripeRouter = require('./services/stripe.router');
+
 const path = require("path");
 global.appRoot = path.resolve(__dirname);
 
 const app = express();
 const jwtProtection = jwt( { secret: process.env.TOKEN_SECRET, algorithms: ['HS256'] } );
-const stripe = require("stripe")("sk_test_4eC39HqLyjWDarjtT1zdp7dc");
 
 
 app.use(cors());
@@ -34,18 +35,7 @@ app.use("/api/newsletter", newsletterRouter);
 app.use("/api/users", jwtProtection, userRouter);
 app.use("/api/transactions", jwtProtection, transactionRouter);
 app.use("/api/requestMoney", jwtProtection, requestMoneyRouter);
-
-
-
-app.post("/create-payment-intent", async (req, res) => {
-  
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount: req.body.amount,
-    description: req.body.walletId,
-    currency: "eur"
-  });
-  res.send(paymentIntent);
-});
+app.use('api/stripe', jwtProtection, stripeRouter);
 
 
 const start = async () => {
