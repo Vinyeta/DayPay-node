@@ -5,10 +5,11 @@ const { body } = require('express-validator');
 
 router.route("/login").post(authController.login2); 
 router
-.route("/signUp")
-.post(
-    body('password').isLength({min: 5 }),
-    body('email').isEmail(),
-    authController.signUp);
+    .route("/signUp")
+    .post(
+        body('password').isLength({min: 5 }),
+        body('email').isEmail(),
+        authController.signUp
+    );
 
 module.exports = router;

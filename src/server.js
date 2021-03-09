@@ -12,7 +12,7 @@ const newsletterRouter = require("./resources/newsletter/newsletter.router");
 const userRouter = require("./resources/users/users.router");
 const authRouter = require("./resources/auth/auth.router");
 const requestMoneyRouter = require("./resources/requestMoney/requestMoney.router");
-const stripeRouter = require('./services/stripe.router');
+const stripeRouter = require("./resources/stripe/stripe.router");
 
 const path = require("path");
 global.appRoot = path.resolve(__dirname);
@@ -35,7 +35,8 @@ app.use("/api/newsletter", newsletterRouter);
 app.use("/api/users", jwtProtection, userRouter);
 app.use("/api/transactions", jwtProtection, transactionRouter);
 app.use("/api/requestMoney", jwtProtection, requestMoneyRouter);
-app.use('api/stripe', jwtProtection, stripeRouter);
+app.use("/api/stripe",  stripeRouter);
+
 
 
 const start = async () => {
