@@ -14,7 +14,6 @@ const walletModelSchema = mongoose.Schema({
 const Wallet = mongoose.model("WalletModel", walletModelSchema);
 
 const create = (wallet) => {
-  console.log(wallet);
   Wallet.create(wallet, function (err, docs) {
     if (err) {
       console.log(err);

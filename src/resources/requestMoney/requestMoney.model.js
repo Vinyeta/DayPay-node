@@ -17,7 +17,7 @@ const requestMoneyModelSchema = mongoose.Schema({
     },
     sender: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "WalletModel",
+      ref: "WalletModel"
     },
     status: {
       type: String,
