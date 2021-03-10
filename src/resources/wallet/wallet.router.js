@@ -7,7 +7,7 @@ router.route("/").post(walletController.createOne);
 router
   .route('/:id')
   .get(walletController.getOne)
-  .patch(walletController.updateOne);
+  .patch(walletController.update);
 
 router
   .route('/:id/author')
@@ -15,10 +15,14 @@ router
 
 router
   .route('/:id/balance')
-    .get(walletController.getBalance)
+    .get(walletController.getBalance);
 
   router
   .route('/:id/increment')
-  .get(walletController.weeklyIncrement)
+  .get(walletController.weeklyIncrement);
+
+router 
+  .route('/:id/stripePayment')
+  .patch(walletController.stripePayment);
 
 module.exports = router;

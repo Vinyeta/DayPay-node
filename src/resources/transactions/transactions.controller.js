@@ -7,7 +7,6 @@ const currency = require("../../Utils/moneyFormating");
 
 const getAll = async (req, res) => {
   const transaction = await transactionModel.all();
-
   return res.status(200).json(transaction);
 };
 
@@ -49,7 +48,7 @@ const handleTransaction = async (req, res) => {
   const targetUser = await  userModel.getByEmail(req.body.receiver);
   const receiver = await walletModel.getByUser(targetUser._id)
 
-  if (req.body.sender === receiver._id) return res.status(400).json('Cannot send money to yourself')
+  if (req.body.sender == receiver._id) return res.status(400).json('Cannot send money to yourself')
 
   const newTransaction = {
     "sender": req.body.sender,

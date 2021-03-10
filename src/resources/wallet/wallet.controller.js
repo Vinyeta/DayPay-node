@@ -21,7 +21,7 @@ const createOne = (req, res) => {
   res.status(201).json(walletUpdated)
 };
 
-const updateOne = (req, res) => {
+const update = (req, res) => {
   const updatedBody = {
     "comment" : req.body.comment,
     "paymentMethod": req.body.paymentMethod,
@@ -68,11 +68,23 @@ const weeklyIncrement = async (req, res) => {
   let increment = currency.EURO(sum).value * 100 / currency.EURO(lastWeekFunds).value
   return res.status(200).json(increment);
 }
+
+const stripePayment = async (req,res) => {
+  const wallet = await walletModel.getOne(req.params.id);
+  const updatedBody = {
+    "funds": currency.EURO(wallet.funds).add(req.body.amount).format()
+  }
+  console.log(updatedBody.funds); 
+  const updatedWallet = walletModel.updateOne(req.params.id, updatedBody);
+  return res.status(200).json(updatedWallet);
+}
+
 module.exports = {
   getOne,
   createOne,
-  updateOne,
+  update,
   getByUserId,
   getBalance,
-  weeklyIncrement
+  weeklyIncrement,
+  stripePayment
 };
