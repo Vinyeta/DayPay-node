@@ -13,6 +13,7 @@ const userRouter = require("./resources/users/users.router");
 const authRouter = require("./resources/auth/auth.router");
 const requestMoneyRouter = require("./resources/requestMoney/requestMoney.router");
 const stripeRouter = require("./resources/stripe/stripe.router");
+const rabbitmq = require("./services/MQservice");
 
 const path = require("path");
 global.appRoot = path.resolve(__dirname);
@@ -44,6 +45,7 @@ const start = async () => {
     app.listen(config.port, () => {
       console.log(`REST API on http://localhost:${config.port}`);
     });
+    rabbitmq.queueConsumer("DayPay");
   } catch (e) {
     console.error(e);
   }

@@ -7,6 +7,7 @@ const sendMessage = async(req, res, next)=>{
     res.statusCode = 200;
     res.data = {"message-sent":true};
     next();
+    return res.status(200).json('message sent to queue')
   }
 
   module.exports = {
