@@ -14,16 +14,14 @@ const transactionsModelSchema = mongoose.Schema({
   },
   concept: String,
   date: { type: Date, default: Date.now },
-  amount: Number,
+  amount: String,
 });
 
 // Compile model from schema
-const Transaction = mongoose.model(
-  "TransactionsModel",
-  transactionsModelSchema
-);
+const Transaction = mongoose.model("TransactionsModel", transactionsModelSchema );
 
 const create = (transaction) => {
+  
   Transaction.create(transaction, function (err, docs) {
     if (err) {
       console.log(err);
@@ -35,7 +33,7 @@ const create = (transaction) => {
 
 const get = async (id) => {
   let query = { _id: id };
-  return await Transaction.findOne(query).populate("author"); //['firstName', 'email'] para pedir especifciamete esos datos.
+  return await Transaction.findOne(query)//.populate("author"); //['firstName', 'email'] para pedir especifciamete esos datos.
 };
 
 const all = async () => {
@@ -70,7 +68,7 @@ const transaction = (id) => {
   let query = { _id: id };
   return walletModel.findOneAndUpdate(
     { query },
-    { saldo: saldo },
+    { funds: funds },
     { new: true }
   );
 };
@@ -78,11 +76,20 @@ const transaction = (id) => {
 const getBySender = (walletId) => {
   let query = { sender: walletId };
   return Transaction.find(query)
+  .populate ({
+    path:"receiver",
+    populate: { path: "author"}
+  })
     .sort({ date: -1 })
 };
 const getByReceiver = (walletId) => {
   let query = { receiver: walletId };
   return Transaction.find(query)
+  .populate ({
+    path: "sender",
+    populate: { path: "author"}
+  })
+
     .sort({ date: -1 })
 };
 
@@ -119,6 +126,12 @@ const getByReceiver$DateRange = (walletId) => {
     .sort({ date: -1 })
 };
 
+const getTransactionsByWallet = (walletId) => {
+  let query = { $or: [{receiver: walletId}, {sender: walletId}] };
+  return Transaction.find(query)
+    .sort({ date: -1 })
+}
+
 module.exports = {
   create,
   update,
@@ -129,5 +142,6 @@ module.exports = {
   getBySender,
   getByReceiver,
   getBySender$DateRange,
-  getByReceiver$DateRange
+  getByReceiver$DateRange,
+  getTransactionsByWallet
 };
