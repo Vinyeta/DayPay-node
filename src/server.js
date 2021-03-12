@@ -14,6 +14,7 @@ const authRouter = require("./resources/auth/auth.router");
 const requestMoneyRouter = require("./resources/requestMoney/requestMoney.router");
 const stripeRouter = require("./resources/stripe/stripe.router");
 const rabbitmq = require("./services/MQservice");
+const queuerRouter = require('./resources/queue/queue.router');
 
 const path = require("path");
 global.appRoot = path.resolve(__dirname);
@@ -37,6 +38,7 @@ app.use("/api/users", jwtProtection, userRouter);
 app.use("/api/transactions", jwtProtection, transactionRouter);
 app.use("/api/requestMoney", jwtProtection, requestMoneyRouter);
 app.use("/api/stripe",  stripeRouter);
+app.use("/api/queue", jwtProtection, queuerRouter);
 
 
 
@@ -45,7 +47,7 @@ const start = async () => {
     app.listen(config.port, () => {
       console.log(`REST API on http://localhost:${config.port}`);
     });
-    rabbitmq.queueConsumer("DayPay");
+    rabbitmq.openRabitChannel("DayPay");
   } catch (e) {
     console.error(e);
   }

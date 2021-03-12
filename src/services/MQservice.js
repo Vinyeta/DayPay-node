@@ -5,8 +5,16 @@ const openRabitChannel = () => {
       amqp.connect(process.env.MQ_CONN_URL, function (err, conn) {
       conn.createChannel(function (err, channel) {
          ch = channel;
-         console.log("Channel: ",ch);
-         ch.consume("Daypay", queueConsumer(msg),    { noAck: false });
+         channel.assertQueue("Daypay", {
+            durable: true
+          });
+          ch.consume("DayPay", function(msg){
+            console.log('.....');
+            setTimeout(function () {
+               console.log("Message:", msg.content);
+            },10000);
+            ch.ack(msg);
+},    { noAck: false });
       });
    });
 }
@@ -18,16 +26,16 @@ const publishToQueue = async (queueName, data) => {
 const queueConsumer = (msg) => {
             console.log('.....');
             setTimeout(function () {
-               console.log("Message:", msg.content.toString());
+               console.log("Message:", msg);
                ch.ack(msg);
-            }, 30000);
+            },1000);
 }
       
 
-process.on('exit', (code) => {
-   ch.close();
-   console.log(`Closing rabbitmq channel`);
-});
+// process.on('exit', (code) => {
+//    ch.close();
+//    console.log(`Closing rabbitmq channel`);
+// });
 
 
 
