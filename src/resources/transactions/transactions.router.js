@@ -4,13 +4,6 @@ const { body } = require('express-validator');
 
 const router = Router();
 
-router.route('/')
-  .post(  body('amount').isNumeric(),
-          body('receiver').isEmail(),
-          (transactionController.handleTransaction)
-      )
-
-
 router
   .route("/:id")
   // .get(transactionController.getOne)
