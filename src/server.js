@@ -47,7 +47,7 @@ const start = async () => {
     app.listen(config.port, () => {
       console.log(`REST API on http://localhost:${config.port}`);
     });
-    rabbitmq.openRabitChannel("DayPay");
+    rabbitmq.openRabitChannel();
   } catch (e) {
     console.error(e);
   }

@@ -36,26 +36,24 @@ const remove = (req, res) => {
   return res.status(200).json(transactionWithoutTheDeleted);
 };
 
-const handleTransaction = async (req, res) => {
-  const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-    if (req.body.amount < 0 ) {
-        return res.status(400).json("Invalid value");
+const handleTransaction = async (payload) => {
+  payload = JSON.parse(payload);
+  console.log(payload);
+    if (payload.amount < 0 ) {
+        return 'Amount not a postive number'
       }
-  const sender = await walletModel.getOne(req.body.sender);
-  const targetUser = await  userModel.getByEmail(req.body.receiver);
+  const sender = await walletModel.getOne(payload.sender);
+  const targetUser = await  userModel.getByEmail(payload.receiver);
   const receiver = await walletModel.getByUser(targetUser._id)
 
-  if (req.body.sender == receiver._id) return res.status(400).json('Cannot send money to yourself')
+  if (payload.sender == receiver._id) return 'Cannot send money to yourself'
 
   const newTransaction = {
-    "sender": req.body.sender,
+    "sender": payload.sender,
     "receiver": receiver._id,
-    "amount": currency.EURO(req.body.amount).format()
+    "amount": currency.EURO(payload.amount).format()
   };
-  const moneyToAddOrSubstract = currency.EURO(req.body.amount); //validar primero si la wallet tiene el dinero que pretende enviar.
+  const moneyToAddOrSubstract = currency.EURO(payload.amount); //validar primero si la wallet tiene el dinero que pretende enviar.
   if (currency.EURO(sender.funds).value >= currency.EURO(moneyToAddOrSubstract).value) {
     const walletSuma = await walletModel.updateOne(receiver, {
       funds: currency.EURO(receiver.funds).add(moneyToAddOrSubstract).format(),
@@ -64,12 +62,6 @@ const handleTransaction = async (req, res) => {
       funds: currency.EURO(sender.funds).subtract(moneyToAddOrSubstract).format(),
     });
     const transactionCreated = transactionModel.create(newTransaction);
-
-    return res
-      .status(200)
-      .json({ transactionCreated, walletSuma, walletResta });
-  } else {
-    return res.status(400).json("error: Dinero insuficiente para ser enviado");
   }
 };
 
