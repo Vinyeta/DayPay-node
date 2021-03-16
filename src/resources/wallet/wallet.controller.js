@@ -1,5 +1,6 @@
 const walletModel = require('./wallet.model');
 const TransactionsModel = require('../transactions/transactions.model');
+const transactionController = require('../transactions/transactions.controller')
 const currency = require("../../Utils/moneyFormating");
 
 
@@ -70,13 +71,19 @@ const weeklyIncrement = async (req, res) => {
 }
 
 const stripePayment = async (req,res) => {
-  const wallet = await walletModel.getOne(req.params.id);
-  const updatedBody = {
-    "funds": currency.EURO(wallet.funds).add(req.body.amount).format()
+  try {
+    const wallet = await walletModel.getOne(req.params.id);
+
+    const updatedBody = {
+      "funds": currency.EURO(wallet.funds).add(req.body.paymentIntent.amount).format()
+    }
+    console.log(updatedBody.funds); 
+    const updatedWallet = walletModel.updateOne(req.params.id, updatedBody);
+    transactionController.createStripeTransaction(req.body.paymentIntent, req.params.id)
+    return res.status(200).json(updatedWallet);
+  } catch (err) {
+    console.log(err);
   }
-  console.log(updatedBody.funds); 
-  const updatedWallet = walletModel.updateOne(req.params.id, updatedBody);
-  return res.status(200).json(updatedWallet);
 }
 
 module.exports = {

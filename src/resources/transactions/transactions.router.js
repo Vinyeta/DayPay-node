@@ -11,14 +11,6 @@ router.route('/')
       )
 
 
-router
-  .route("/:id")
-  // .get(transactionController.getOne)
-  .patch(transactionController.update)  
-  // .delete(transactionController.remove)
-
-
-
 router.route("/:id/sent").get(transactionController.getTransactionsBySender);
 router
   .route("/:id/received")

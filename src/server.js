@@ -19,7 +19,7 @@ global.appRoot = path.resolve(__dirname);
 
 const app = express();
 const jwtProtection = jwt( { secret: process.env.TOKEN_SECRET, algorithms: ['HS256'] } );
-
+dotenv.config();
 
 app.use(cors());
 app.use(json());
