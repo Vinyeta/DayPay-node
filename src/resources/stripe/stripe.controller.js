@@ -9,7 +9,6 @@ const stripePayment = async (req, res) => {
         description: req.body.walletId,
         currency: "eur"
     });
-    console.log(paymentIntent);
     paymentIntent.amount /= 100;
     res.send(paymentIntent);
 };

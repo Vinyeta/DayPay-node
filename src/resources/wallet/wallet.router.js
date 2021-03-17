@@ -25,4 +25,8 @@ router
   .route('/:id/stripePayment')
   .patch(walletController.stripePayment);
 
+router
+  .route('/:id/histogram')
+  .get(walletController.walletHistogram);
+
 module.exports = router;
