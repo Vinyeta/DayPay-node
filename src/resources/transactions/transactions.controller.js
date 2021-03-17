@@ -7,7 +7,6 @@ require('dotenv').config()
 const stripe = require("stripe")(process.env.STRIPE_API_KEY);
 
 
-console.log(process.env.STRIPE_API_KEY);
 
 const handleTransaction = async (req, res) => {
   const errors = validationResult(req);

@@ -75,7 +75,7 @@ const stripePayment = async (req,res) => {
     const wallet = await walletModel.getOne(req.params.id);
 
     const updatedBody = {
-      "funds": currency.EURO(wallet.funds).add(req.body.paymentIntent.amount).format()
+      "funds": currency.EURO(wallet.funds).add(req.body.paymentIntent.amount/100).format()
     }
     console.log(updatedBody.funds); 
     const updatedWallet = walletModel.updateOne(req.params.id, updatedBody);
