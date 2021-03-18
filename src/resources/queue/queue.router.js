@@ -9,7 +9,6 @@ router
 router
     .route('/')
     .get((req,res) => res.status(200).json('working'))
-    .post(queueController.sendMessage)
 
 
 module.exports = router;
