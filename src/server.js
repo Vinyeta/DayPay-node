@@ -3,7 +3,7 @@ const { json, urlencoded } = require("body-parser");
 const morgan = require("morgan");
 const cors = require("cors");
 const jwt = require("express-jwt");
-const dotenv = require("dotenv");
+require("dotenv").config();
 const config = require("./config.js");
 const walletRouter = require("./resources/wallet/wallet.router.js");
 const mongo = require("./config/mongo");
@@ -21,7 +21,6 @@ global.appRoot = path.resolve(__dirname);
 
 const app = express();
 const jwtProtection = jwt( { secret: process.env.TOKEN_SECRET, algorithms: ['HS256'] } );
-
 
 app.use(cors());
 app.use(json());

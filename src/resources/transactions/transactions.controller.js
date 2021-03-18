@@ -3,38 +3,10 @@ const walletModel = require("../wallet/wallet.model");
 const userModel = require('../users/users.model');
 const { validationResult } = require('express-validator');
 const currency = require("../../Utils/moneyFormating");
+require('dotenv').config()
+const stripe = require("stripe")(process.env.STRIPE_API_KEY);
 
 
-const getAll = async (req, res) => {
-  const transaction = await transactionModel.all();
-  return res.status(200).json(transaction);
-};
-
-const getOne = async (req, res) => {
-  const transaction = await transactionModel.get(req.params.id);
-  if (transaction) {
-    return res.status(200).json(transaction);
-  }
-  return res.status(404).end();
-};
-
-
-const update = (req, res) => {
-  const updateTransaction = req.body;
-
-  const transactionUpdated = transactionModel.update(
-    req.params.id,
-    updateTransaction
-  );
-
-  return res.status(200).json(transactionUpdated);
-};
-
-const remove = (req, res) => {
-  const transactionWithoutTheDeleted = transactionModel.remove(req.params.id);
-
-  return res.status(200).json(transactionWithoutTheDeleted);
-};
 
 const handleTransaction = async (payload) => {
   payload = JSON.parse(payload);
@@ -126,15 +98,23 @@ const getByReceiverLastWeek = async (req, res) => {
   }
 }
 
+const createStripeTransaction = async (paymentIntent, walletId) => {
+  const paymentMethod = await stripe.paymentMethods.retrieve(paymentIntent.payment_method);
+  const transaction = {
+    receiver: walletId,
+    stripeSender: paymentMethod.card.last4,
+    amount: currency.EURO(paymentIntent.amount/100).format()
+  }
+  transactionModel.create(transaction);
+}
+
 module.exports = {
-  update,
-  getAll,
-  getOne,
-  remove,
+
   handleTransaction,
   getTransactionsBySender,
   getTransactionsByReceiver,
   getAllWalletTransactions,
   getBySenderLastWeek,
-  getByReceiverLastWeek
+  getByReceiverLastWeek,
+  createStripeTransaction
 };

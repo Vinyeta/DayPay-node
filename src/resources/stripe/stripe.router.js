@@ -5,10 +5,11 @@ const router = Router();
 
 router
     .route('/payment')
-    .post(stripeController.stripePayment);
+    .post(stripeController.stripePayment)
 
 router
     .route('/')
-    .get((req,res) => {return res.status(200).json('Ok')});
+        .get((req,res) => {return res.status(200).json('Ok')}) 
+
 
 module.exports = router;
