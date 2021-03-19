@@ -20,8 +20,8 @@ const getOne = async (req, res) => {
 };
 
 const update = (req, res) => {
-  const updateTransaction = req.body;
 
+  const updateTransaction = req.body;
   const transactionUpdated = transactionModel.update(
     req.params.id,
     updateTransaction
@@ -36,8 +36,8 @@ const remove = (req, res) => {
 };
 
 const handleTransaction = async (payload) => {
-  const user = jwt.decode(req.headers.authorization.split(" ")[1]);
-  if (user._id == payload.sender) {payload = JSON.parse(payload);
+  
+  payload = JSON.parse(payload);
   console.log(payload);
   if (payload.amount < 0) {
     return "Amount not a postive number";
@@ -68,8 +68,6 @@ const handleTransaction = async (payload) => {
         .format(),
     });
     const transactionCreated = transactionModel.create(newTransaction);
-  }} else {
-    return res.status(401);
   }
 };
 

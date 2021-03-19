@@ -3,6 +3,8 @@ const { validationResult } = require('express-validator');
 const userModel = require('../users/users.model');
 const walletModel = require('../wallet/wallet.model');
 const currency = require("../../Utils/moneyFormating");
+const jwt = require("jsonwebtoken");
+
 
 
 const get = async (req, res) => {
@@ -37,6 +39,8 @@ const update = (req, res) => {
 };
 
 const getByUser = async (req, res) => {
+  const user = jwt.decode(req.headers.authorization.split(" ")[1]);
+  if (user._id == req.params.id) {
   try {
     const user = await userModel.get(req.params.id);
     const wallet = await walletModel.getByUser(user._id);
@@ -47,6 +51,8 @@ const getByUser = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(400).json();
+  }} else {
+    return res.status(401)
   }
 };
 
