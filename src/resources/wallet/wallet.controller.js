@@ -94,7 +94,7 @@ const walletHistogram = async (req, res) => {
       var d = new Date(b.date);
       return d - c;
     });
-    const walletMoney = [currentFunds.funds];
+    const walletMoney = [currency.EURO(currentFunds.funds).value];
     let countingMoney = {
       funds: currentFunds.funds,
       date: new Date,
@@ -103,13 +103,13 @@ const walletHistogram = async (req, res) => {
       if (transaction.date.getDay() === countingMoney.date.getDay()) {
         countingMoney.funds = currency.EURO(countingMoney.funds).subtract(transaction.amount).format();
       } else {
-        walletMoney.push(countingMoney.funds);
+        walletMoney.push(currency.EURO(countingMoney.funds).value);
         countingMoney.date.setDate(countingMoney.date.getDate()-1);
         countingMoney.funds = currency.EURO(countingMoney.funds).subtract(transaction.amount).format();
       }
     });
     while (walletMoney.length < 7) {
-      walletMoney.push(countingMoney.funds);
+      walletMoney.push(currency.EURO(countingMoney.funds).value);
     }
     return res.status(200).json(walletMoney);
   } catch (err) {
