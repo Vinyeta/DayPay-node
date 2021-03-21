@@ -8,6 +8,7 @@ const stripe = require("stripe")(process.env.STRIPE_API_KEY);
 
 
 
+
 const handleTransaction = async (payload) => {
   payload = JSON.parse(payload);
   console.log(payload);
@@ -98,6 +99,26 @@ const getByReceiverLastWeek = async (req, res) => {
   }
 }
 
+const getByReceiverSenderLastWeek = async (req, res) => {
+  const incomingTransactions = await transactionModel.getByReceiver$DateRange(req.params.id);
+  const outgoingTransactions = await transactionModel.getBySender$DateRange(req.params.id);
+  outgoingTransactions.map((e) =>{
+    const amountValue = currency.EURO(e.amount).value;
+    e.amount = currency.EURO(-amountValue).format();
+  }); 
+
+
+  let allTransactions = incomingTransactions.concat(outgoingTransactions);
+  allTransactions.sort((a, b) => {
+    var c = new Date(a.date);
+    var d = new Date(b.date);
+    return d-c;
+  }); 
+  allTransactions.map((e)=> e.amount = currency.EURO(e.amount).value)
+  return res.status(200).json(allTransactions); 
+}
+
+
 const createStripeTransaction = async (paymentIntent, walletId) => {
   const paymentMethod = await stripe.paymentMethods.retrieve(paymentIntent.payment_method);
   const transaction = {
@@ -116,5 +137,6 @@ module.exports = {
   getAllWalletTransactions,
   getBySenderLastWeek,
   getByReceiverLastWeek,
+  getByReceiverSenderLastWeek,
   createStripeTransaction
 };
