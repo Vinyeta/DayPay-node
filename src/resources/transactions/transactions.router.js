@@ -32,4 +32,8 @@ router
   .route("/:id/receiv/date")
   .get(transactionController.getByReceiverLastWeek);
 
+router
+  .route('/:id/lastWeek')
+  .get(transactionController.getByReceiverSenderLastWeek)
+
 module.exports = router;
