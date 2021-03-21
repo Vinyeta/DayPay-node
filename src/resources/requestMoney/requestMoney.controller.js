@@ -30,9 +30,9 @@ const create = async (req, res) => {
   return res.status(201).json(requestCreated);
 
 };
-const update = (req, res) => {
+const update = async (req, res) => {
   const updatedRequest = req.body;
-  const requestUpdated = requestMoneyModel.update(req.params.id, updatedRequest);
+  const requestUpdated = await requestMoneyModel.update(req.params.id, updatedRequest);
   return res.status(200).json(requestUpdated);
 };
 

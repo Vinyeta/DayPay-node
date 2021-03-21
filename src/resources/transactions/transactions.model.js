@@ -12,6 +12,7 @@ const transactionsModelSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "WalletModel",
   },
+  stripeSender: String,
   concept: String,
   date: { type: Date, default: Date.now },
   amount: String,
