@@ -3,6 +3,7 @@ const walletModel = require("../wallet/wallet.model");
 const userModel = require('../users/users.model');
 const { validationResult } = require('express-validator');
 const currency = require("../../Utils/moneyFormating");
+const parseDate = require('../../Utils/parseDate')
 
 
 const getAll = async (req, res) => {
@@ -149,6 +150,7 @@ const getByReceiverSenderLastWeek = async (req, res) => {
     var d = new Date(b.date);
     return d-c;
   }); 
+  allTransactions.map((e)=> e.date = parseDate(e.date));
   return res.status(200).json(allTransactions); 
 }
 
