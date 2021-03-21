@@ -1,6 +1,7 @@
 const walletModel = require('./wallet.model');
 const TransactionsModel = require('../transactions/transactions.model');
 const currency = require("../../Utils/moneyFormating");
+const parseDate = require('../../Utils/parseDate');
 
 
 
@@ -94,22 +95,33 @@ const walletHistogram = async (req, res) => {
       var d = new Date(b.date);
       return d - c;
     });
-    const walletMoney = [currency.EURO(currentFunds.funds).value];
     let countingMoney = {
       funds: currentFunds.funds,
       date: new Date,
     }
+    const walletMoney = [{ 
+      funds: currency.EURO(currentFunds.funds).value, 
+      date: countingMoney.date.getDay()
+    }];
+
     allTransactions.forEach((transaction) => {
       if (transaction.date.getDay() === countingMoney.date.getDay()) {
         countingMoney.funds = currency.EURO(countingMoney.funds).subtract(transaction.amount).format();
       } else {
-        walletMoney.push(currency.EURO(countingMoney.funds).value);
         countingMoney.date.setDate(countingMoney.date.getDate()-1);
+        walletMoney.push({ 
+          funds: currency.EURO(countingMoney.funds).value, 
+          date: countingMoney.date.getDay()
+        });
         countingMoney.funds = currency.EURO(countingMoney.funds).subtract(transaction.amount).format();
       }
     });
     while (walletMoney.length < 7) {
-      walletMoney.push(currency.EURO(countingMoney.funds).value);
+      countingMoney.date.setDate(countingMoney.date.getDate()-1);
+      walletMoney.push({ 
+        funds: currency.EURO(countingMoney.funds).value, 
+        date: countingMoney.date.getDay()
+      });
     }
     return res.status(200).json(walletMoney);
   } catch (err) {
