@@ -1,5 +1,6 @@
 const walletModel = require('./wallet.model');
 const TransactionsModel = require('../transactions/transactions.model');
+const transactionController = require('../transactions/transactions.controller')
 const currency = require("../../Utils/moneyFormating");
 const parseDate = require('../../Utils/parseDate');
 
@@ -70,14 +71,21 @@ const weeklyIncrement = async (req, res) => {
   return res.status(200).json(increment);
 }
 
-const stripePayment = async (req, res) => {
-  const wallet = await walletModel.getOne(req.params.id);
-  const updatedBody = {
-    "funds": currency.EURO(wallet.funds).add(req.body.amount).format()
+
+const stripePayment = async (req,res) => {
+  try {
+    const wallet = await walletModel.getOne(req.params.id);
+
+    const updatedBody = {
+      "funds": currency.EURO(wallet.funds).add(req.body.paymentIntent.amount/100).format()
+    }
+    console.log(updatedBody.funds); 
+    const updatedWallet = walletModel.updateOne(req.params.id, updatedBody);
+    transactionController.createStripeTransaction(req.body.paymentIntent, req.params.id)
+    return res.status(200).json(updatedWallet);
+  } catch (err) {
+    console.log(err);
   }
-  console.log(updatedBody.funds);
-  const updatedWallet = walletModel.updateOne(req.params.id, updatedBody);
-  return res.status(200).json(updatedWallet);
 }
 const walletHistogram = async (req, res) => {
   try {

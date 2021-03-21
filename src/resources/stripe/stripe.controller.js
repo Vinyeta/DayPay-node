@@ -13,6 +13,8 @@ const stripePayment = async (req, res) => {
     res.send(paymentIntent);
 };
 
+
+
 module.exports= {
-    stripePayment
+    stripePayment,
 }
