@@ -150,7 +150,7 @@ const getByReceiverSenderLastWeek = async (req, res) => {
     var d = new Date(b.date);
     return d-c;
   }); 
-  allTransactions.map((e)=> e.date = parseDate(e.date));
+  allTransactions.map((e)=> e.amount = currency.EURO(e.amount).value)
   return res.status(200).json(allTransactions); 
 }
 

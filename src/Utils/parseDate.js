@@ -35,6 +35,7 @@ const year = (year) => {
 }
 
 const parseDate = (date) => {
+    console.log(`${date.getDate()}-${month(date.getMonth())}-${year(date.getFullYear())}`)
     return `${date.getDate()}-${month(date.getMonth())}-${year(date.getFullYear())}`;
 }
 
