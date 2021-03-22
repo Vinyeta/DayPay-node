@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-const walletModel = require("../wallet/wallet.model")
-const currency= require("../../Utils/moneyFormating");
-
+const walletModel = require("../wallet/wallet.model");
+const currency = require("../../Utils/moneyFormating");
 
 const userModelSchema = mongoose.Schema({
   name: String,
@@ -29,19 +28,18 @@ const create = (user) => {
     if (err) {
       return console.log(err);
     } else {
-       console.log("Created Docs : ", docs);
+      console.log("Created Docs : ", docs);
     }
-  })
-  walletModel.Wallet.create( {"author": newUser._id, "funds":currency.EURO(0).format()});
+  });
+  walletModel.Wallet.create({
+    author: newUser._id,
+    funds: currency.EURO(0).format(),
+  });
 };
 
 const get = async (id) => {
   let query = { _id: id };
   return await User.findOne(query);
-};
-
-const getAll = async () => {
-  return await User.find();
 };
 
 const remove = (id) => {
@@ -91,7 +89,6 @@ module.exports = {
   create,
   remove,
   get,
-  getAll,
   getByEmail,
   update,
   login,

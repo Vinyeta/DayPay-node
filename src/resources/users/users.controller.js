@@ -1,12 +1,8 @@
 const userModel = require("./users.model");
 const e = require("cors");
 
-//que es cors?
 
-const getAll = async (req, res) => {
-  const users = await userModel.getAll();
-  return res.status(200).json(users);
-};
+
 const get = async (req, res) => {
   const user = await userModel.get(req.params.id);
   return res.status(200).json(user);
@@ -31,5 +27,4 @@ module.exports = {
   update,
   get,
   remove,
-  getAll,
 };

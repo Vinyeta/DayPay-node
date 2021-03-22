@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-
 const walletModel = require("../wallet/wallet.model");
 
 // Define model schema
@@ -19,10 +18,12 @@ const transactionsModelSchema = mongoose.Schema({
 });
 
 // Compile model from schema
-const Transaction = mongoose.model("TransactionsModel", transactionsModelSchema );
+const Transaction = mongoose.model(
+  "TransactionsModel",
+  transactionsModelSchema
+);
 
 const create = (transaction) => {
-  
   Transaction.create(transaction, function (err, docs) {
     if (err) {
       console.log(err);
@@ -34,7 +35,7 @@ const create = (transaction) => {
 
 const get = async (id) => {
   let query = { _id: id };
-  return await Transaction.findOne(query)//.populate("author"); //['firstName', 'email'] para pedir especifciamete esos datos.
+  return await Transaction.findOne(query); 
 };
 
 const all = async () => {
@@ -77,21 +78,21 @@ const transaction = (id) => {
 const getBySender = (walletId) => {
   let query = { sender: walletId };
   return Transaction.find(query)
-  .populate ({
-    path:"receiver",
-    populate: { path: "author"}
-  })
-    .sort({ date: -1 })
+    .populate({
+      path: "receiver",
+      populate: { path: "author" },
+    })
+    .sort({ date: -1 });
 };
 const getByReceiver = (walletId) => {
   let query = { receiver: walletId };
   return Transaction.find(query)
-  .populate ({
-    path: "sender",
-    populate: { path: "author"}
-  })
+    .populate({
+      path: "sender",
+      populate: { path: "author" },
+    })
 
-    .sort({ date: -1 })
+    .sort({ date: -1 });
 };
 
 const getBySender$DateRange = (walletId) => {
@@ -99,39 +100,40 @@ const getBySender$DateRange = (walletId) => {
   const lastWeek = new Date();
   lastWeek.setDate(lastWeek.getDate() - 7);
   let query = {
-    $and: [{ sender: walletId }, {
-      date: {
-        $gte: lastWeek,
-        $lt: currentDate
-      }
-    }
-    ]
+    $and: [
+      { sender: walletId },
+      {
+        date: {
+          $gte: lastWeek,
+          $lt: currentDate,
+        },
+      },
+    ],
   };
-  return Transaction.find(query)
-    .sort({ date: -1 })
+  return Transaction.find(query).sort({ date: -1 });
 };
 const getByReceiver$DateRange = (walletId) => {
   const currentDate = new Date();
   const lastWeek = new Date();
   lastWeek.setDate(lastWeek.getDate() - 7);
   let query = {
-    $and: [{ receiver: walletId }, {
-      date: {
-        $gte: lastWeek,
-        $lt: currentDate
-      }
-    }
-    ]
+    $and: [
+      { receiver: walletId },
+      {
+        date: {
+          $gte: lastWeek,
+          $lt: currentDate,
+        },
+      },
+    ],
   };
-  return Transaction.find(query)
-    .sort({ date: -1 })
+  return Transaction.find(query).sort({ date: -1 });
 };
 
 const getTransactionsByWallet = (walletId) => {
-  let query = { $or: [{receiver: walletId}, {sender: walletId}] };
-  return Transaction.find(query)
-    .sort({ date: -1 })
-}
+  let query = { $or: [{ receiver: walletId }, { sender: walletId }] };
+  return Transaction.find(query).sort({ date: -1 });
+};
 
 module.exports = {
   create,
@@ -144,5 +146,5 @@ module.exports = {
   getByReceiver,
   getBySender$DateRange,
   getByReceiver$DateRange,
-  getTransactionsByWallet
+  getTransactionsByWallet,
 };
