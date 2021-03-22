@@ -113,9 +113,12 @@ const weeklyIncrement = async (req, res) => {
     });
     let sum = currency.EURO(incomeSum).subtract(outcomeSum);
     const lastWeekFunds = currency.EURO(currentFunds.funds).subtract(sum);
-    let increment =
-      (currency.EURO(sum).value * 100) / currency.EURO(lastWeekFunds).value;
+    if(lastWeekFunds.value > 0) {
+    let increment = (currency.EURO(sum).value * 100) / currency.EURO(lastWeekFunds).value;
     return res.status(200).json(increment.toFixed(2));
+    } else {
+      return res.status(200).json("-- --");
+    }
   } else {
     return res
       .status(401)
