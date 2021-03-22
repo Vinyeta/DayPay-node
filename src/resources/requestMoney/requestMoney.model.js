@@ -1,9 +1,8 @@
 const mongoose = require("mongoose");
 
-const walletModel = require("../wallet/wallet.model");
 //modelo del requestMoney
 
-const Transitions = Object.freeze ({
+const Transitions = Object.freeze({
   Pending: "pending",
   Rejected: "rejected",
   Cancelled: "cancelled",
@@ -11,43 +10,43 @@ const Transitions = Object.freeze ({
 });
 
 const requestMoneyModelSchema = mongoose.Schema({
-    receiver: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "WalletModel",
-    },
-    sender: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "WalletModel"
-    },
-    status: {
-      type: String,
-      enum: Object.values(Transitions),
-    },
-    concept: String,
-    date: { type: Date, default: Date.now },
-    amount: String,
-  });
- 
- 
-  Object.assign(requestMoneyModelSchema.statics, {
-    Transitions,
-  });
+  receiver: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "WalletModel",
+  },
+  sender: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "WalletModel",
+  },
+  status: {
+    type: String,
+    enum: Object.values(Transitions),
+  },
+  concept: String,
+  date: { type: Date, default: Date.now },
+  amount: String,
+});
 
+Object.assign(requestMoneyModelSchema.statics, {
+  Transitions,
+});
 
-// COMPILE MODEL FROM SCHEMA 
+// COMPILE MODEL FROM SCHEMA
 
-const RequestMoney = mongoose.model("RequestMoneyModel", requestMoneyModelSchema);
-
+const RequestMoney = mongoose.model(
+  "RequestMoneyModel",
+  requestMoneyModelSchema
+);
 
 const create = (request) => {
   request.status = Transitions.Pending;
-  RequestMoney.create(request, function( err, docs) {
-      if (err) {
-          console.log(err);
-      } else {
-        console.log("Created Docs:" , docs);
-      }
-    });
+  RequestMoney.create(request, function (err, docs) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("Created Docs:", docs);
+    }
+  });
 };
 
 const update = (id, request) => {
@@ -56,31 +55,29 @@ const update = (id, request) => {
     if (err) {
       console.log(err);
     } else {
-      console.log("Update Request :", docs)
+      console.log("Update Request :", docs);
     }
   });
 };
 
-const get = async (id) => {
-let query ={_id: id};
-return await RequestMoney.findOne(query);
-};
+
 
 const getByWallet = async (id) => {
-  let query = { receiver: id};
+  let query = { receiver: id };
   return await RequestMoney.find(query)
     .populate({
-      path:'sender',
-      populate: { path: 'author' } })
+      path: "sender",
+      populate: { path: "author" },
+    })
     .populate({
-      path: 'receiver',
-      populate: { path: 'author' } })
-    .sort({date: -1});  
-}
+      path: "receiver",
+      populate: { path: "author" },
+    })
+    .sort({ date: -1 });
+};
 
 module.exports = {
   create,
   update,
-  get,
-  getByWallet
+  getByWallet,
 };

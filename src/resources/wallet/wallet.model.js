@@ -2,13 +2,13 @@ const mongoose = require("mongoose");
 
 // Define model schema
 const walletModelSchema = mongoose.Schema({
-    author: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'UserModel'
-    },
-    comment: String,
-    paymentMethod: Array,
-    funds: String
+  author: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "UserModel",
+  },
+  comment: String,
+  paymentMethod: Array,
+  funds: String,
 });
 // Compile model from schema
 const Wallet = mongoose.model("WalletModel", walletModelSchema);
@@ -26,9 +26,7 @@ const getOne = async (id) => {
   let query = { _id: id };
   return await Wallet.findOne(query);
 };
-const all = async () => {
-  return await Wallet.find().populate("id");
-};
+
 const remove = (id) => {
   let query = { _id: id };
   Wallet.deleteOne(query, function (err, docs) {
@@ -53,14 +51,13 @@ const updateOne = (id, updateWallet) => {
 const getByUser = async (id) => {
   let query = { author: id };
   return await Wallet.findOne(query);
-}
+};
 
 module.exports = {
   create,
   updateOne,
   remove,
   getOne,
-  all,
   getByUser,
-  Wallet
+  Wallet,
 };

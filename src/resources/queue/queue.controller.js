@@ -1,14 +1,14 @@
-const MQservice = require('../../services/MQservice')
+const MQservice = require("../../services/MQservice");
 
+const sendMessage = async (req, res, next) => {
+  let payload = req.body;
+  await MQservice.publishToQueue("DayPay", JSON.stringify(payload));
+  res.statusCode = 200;
+  res.data = { "message-sent": true };
+  next();
+  return res.status(200).json("message sent to queue");
+};
 
-const sendMessage = async(req, res, next)=>{
-    let { queueName, payload } = req.body;
-    await MQservice.publishToQueue(queueName, payload);
-    res.statusCode = 200;
-    res.data = {"message-sent":true};
-    next();
-  }
-
-  module.exports = {
-      sendMessage
-  }
+module.exports = {
+  sendMessage,
+};
