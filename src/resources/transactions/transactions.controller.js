@@ -61,7 +61,7 @@ const getTransactionsBySender = async (req, res) => {
     outgoingTransactions.slice(0, 10);
     return res.status(200).json(outgoingTransactions);
   } else {
-    return res.status(401);
+    return res.status(401).json({ error: "User not authorized to do that action" });
   }
 };
 
@@ -76,7 +76,7 @@ const getTransactionsByReceiver = async (req, res) => {
     incomingTransactions.slice(0, 10);
     return res.status(200).json(incomingTransactions);
   } else {
-    return res.status(401);
+    return res.status(401).json({ error: "User not authorized to do that action" });
   }
 };
 
@@ -103,7 +103,7 @@ const getAllWalletTransactions = async (req, res) => {
 
     return res.status(200).json(allTransactions);
   } else {
-    return res.status(401);
+    return res.status(401).json({ error: "User not authorized to do that action" });
 
   }
 };
@@ -121,7 +121,7 @@ const getBySenderLastWeek = async (req, res) => {
       console.log(error);
     }
   } else {
-    return res.status(401);
+    return res.status(401).json({ error: "User not authorized to do that action" });
 
   }
 };
@@ -139,7 +139,7 @@ const getByReceiverLastWeek = async (req, res) => {
       console.log(error);
     }
   } else {
-    return res.status(401);
+    return res.status(401).json({ error: "User not authorized to do that action" });
 
   }
 };

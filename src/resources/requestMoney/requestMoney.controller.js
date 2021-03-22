@@ -46,7 +46,7 @@ const update = async (req, res) => {
     const requestUpdated = requestMoneyModel.update(req.params.id, updatedRequest);
     return res.status(200).json(requestUpdated);
   } else {
-    return res.status(401)
+    return res.status(401).json({ error: "User not authorized to do that action" });
   }
 };
 
@@ -64,7 +64,7 @@ const getByUser = async (req, res) => {
     console.log(error);
     res.status(400).json();
   }} else {
-    return res.status(401)
+    return res.status(401).json({ error: "User not authorized to do that action" });
   }
 };
 

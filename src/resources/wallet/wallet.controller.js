@@ -19,7 +19,7 @@ const getOne = async (req, res) => {
       res.status(500).json(error);
     }
   } else {
-    return res.status(401);
+    return res.status(401).json({ error: "User not authorized to do that action" });
   }
 };
 
@@ -44,7 +44,7 @@ const update = async (req, res) => {
     const wallet = walletModel.updateOne(req.params.id, updatedBody);
     return res.status(200).json(wallet);
   } else {
-    return res.status(401);
+    return res.status(401).json({ error: "User not authorized to do that action" });
   }
 };
 
@@ -55,7 +55,7 @@ const getByUserId = async (req, res) => {
       const wallet = await walletModel.getByUser(req.params.id);
       return res.status(200).json(wallet);
     } else {
-      return res.status(401);
+      return res.status(401).json({ error: "User not authorized to do that action" });
     }
   } catch (error) {
     if (error.message === "wallet not found")
@@ -74,7 +74,7 @@ const getBalance = async (req, res) => {
       console.log("verified");
       res.status(200).json(wallet.funds);
     } else {
-      return res.status(401);
+      return res.status(401).json({ error: "User not authorized to do that action" });
     }
   } catch (error) {
     if (error.message === "wallet not found")
@@ -110,7 +110,7 @@ const weeklyIncrement = async (req, res) => {
       (currency.EURO(sum).value * 100) / currency.EURO(lastWeekFunds).value;
     return res.status(200).json(increment);
   } else {
-    return res.status(401);
+    return res.status(401).json({ error: "User not authorized to do that action" });
   }
 };
 
