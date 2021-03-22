@@ -1,42 +1,17 @@
 const transactionModel = require("./transactions.model");
 const walletModel = require("../wallet/wallet.model");
 const userModel = require("../users/users.model");
-const { validationResult } = require("express-validator");
 const currency = require("../../Utils/moneyFormating");
 const jwt = require("jsonwebtoken");
+require('dotenv').config()
+const stripe = require("stripe")(process.env.STRIPE_API_KEY);
 
 
-const getAll = async (req, res) => {
-  const transaction = await transactionModel.all();
-  return res.status(200).json(transaction);
-};
 
-const getOne = async (req, res) => {
-  const transaction = await transactionModel.get(req.params.id);
-  if (transaction) {
-    return res.status(200).json(transaction);
-  }
-  return res.status(404).end();
-};
-
-const update = (req, res) => {
-
-  const updateTransaction = req.body;
-  const transactionUpdated = transactionModel.update(
-    req.params.id,
-    updateTransaction
-  );
-
-  return res.status(200).json(transactionUpdated);
-};
-
-const remove = (req, res) => {
-  const transactionWithoutTheDeleted = transactionModel.remove(req.params.id);
-  return res.status(200).json(transactionWithoutTheDeleted);
-};
 
 const handleTransaction = async (payload) => {
-  
+
+
   payload = JSON.parse(payload);
   console.log(payload);
   if (payload.amount < 0) {
@@ -58,16 +33,16 @@ const handleTransaction = async (payload) => {
     currency.EURO(sender.funds).value >=
     currency.EURO(moneyToAddOrSubstract).value
   ) {
-    const walletSuma = await walletModel.updateOne(receiver, {
+    await walletModel.updateOne(receiver, {
       funds: currency.EURO(receiver.funds).add(moneyToAddOrSubstract).format(),
     });
-    const walletResta = await walletModel.updateOne(sender, {
+    await walletModel.updateOne(sender, {
       funds: currency
         .EURO(sender.funds)
         .subtract(moneyToAddOrSubstract)
         .format(),
     });
-    const transactionCreated = transactionModel.create(newTransaction);
+    transactionModel.create(newTransaction);
   }
 };
 
@@ -94,11 +69,13 @@ const getTransactionsByReceiver = async (req, res) => {
   const verifyWallet = await walletModel.getByUser(
     jwt.decode(req.headers.authorization.split(" ")[1])
   );
-  if (verifyWallet._id == req.params.id) {const incomingTransactions = await transactionModel.getByReceiver(
-    req.params.id
-  );
-  incomingTransactions.slice(0, 10);
-  return res.status(200).json(incomingTransactions);} else {
+  if (verifyWallet._id == req.params.id) {
+    const incomingTransactions = await transactionModel.getByReceiver(
+      req.params.id
+    );
+    incomingTransactions.slice(0, 10);
+    return res.status(200).json(incomingTransactions);
+  } else {
     return res.status(401);
   }
 };
@@ -107,27 +84,25 @@ const getAllWalletTransactions = async (req, res) => {
   const verifyWallet = await walletModel.getByUser(
     jwt.decode(req.headers.authorization.split(" ")[1])
   );
-  if (verifyWallet._id == req.params.id) {const incomingTransactions = await transactionModel.getByReceiver(
-    req.params.id
-  );
-  const outgoingTransactions = await transactionModel.getBySender(
-    req.params.id
-  );
-  outgoingTransactions.map((e) => {
-    const amountValue = currency.EURO(e.amount).value;
-    e.amount = currency.EURO(-amountValue).format();
-  });
+  if (verifyWallet._id == req.params.id) {
+    const incomingTransactions = await transactionModel.getByReceiver(req.params.id);
+    const outgoingTransactions = await transactionModel.getBySender(req.params.id);
+    outgoingTransactions.map((e) => {
+      const amountValue = currency.EURO(e.amount).value;
+      e.amount = currency.EURO(-amountValue).format();
+    });
 
-  let allTransactions = incomingTransactions.concat(outgoingTransactions);
-  allTransactions.sort((a, b) => {
-    var c = new Date(a.date);
-    var d = new Date(b.date);
-    return d - c;
-  });
+    let allTransactions = incomingTransactions.concat(outgoingTransactions);
+    allTransactions.sort((a, b) => {
+      var c = new Date(a.date);
+      var d = new Date(b.date);
+      return d - c;
+    });
 
-  allTransactions = allTransactions.slice(0, 10);
+    allTransactions = allTransactions.slice(0, 10);
 
-  return res.status(200).json(allTransactions);} else {
+    return res.status(200).json(allTransactions);
+  } else {
     return res.status(401);
 
   }
@@ -136,14 +111,16 @@ const getBySenderLastWeek = async (req, res) => {
   const verifyWallet = await walletModel.getByUser(
     jwt.decode(req.headers.authorization.split(" ")[1])
   );
-  if (verifyWallet._id == req.params.id) { try {
-    const outgoingTransactions = await transactionModel.getBySender$DateRange(
-      req.params.id
-    );
-    return res.status(200).json(outgoingTransactions);
-  } catch (error) {
-    console.log(error);
-  }} else {
+  if (verifyWallet._id == req.params.id) {
+    try {
+      const outgoingTransactions = await transactionModel.getBySender$DateRange(
+        req.params.id
+      );
+      return res.status(200).json(outgoingTransactions);
+    } catch (error) {
+      console.log(error);
+    }
+  } else {
     return res.status(401);
 
   }
@@ -152,28 +129,64 @@ const getByReceiverLastWeek = async (req, res) => {
   const verifyWallet = await walletModel.getByUser(
     jwt.decode(req.headers.authorization.split(" ")[1])
   );
-  if (verifyWallet._id == req.params.id) {try {
-    const ingoingTransactions = await transactionModel.getByReceiver$DateRange(
-      req.params.id
-    );
-    return res.status(200).json(ingoingTransactions);
-  } catch (error) {
-    console.log(error);
-  }} else {
+  if (verifyWallet._id == req.params.id) {
+    try {
+      const ingoingTransactions = await transactionModel.getByReceiver$DateRange(
+        req.params.id
+      );
+      return res.status(200).json(ingoingTransactions);
+    } catch (error) {
+      console.log(error);
+    }
+  } else {
     return res.status(401);
 
   }
 };
 
+const getByReceiverSenderLastWeek = async (req, res) => {
+  const verifyWallet = await walletModel.getByUser(
+    jwt.decode(req.headers.authorization.split(" ")[1])
+  );
+  if (!(verifyWallet._id == req.params.id)) return res.status(401).json('Unauthorized')
+  const incomingTransactions = await transactionModel.getByReceiver$DateRange(req.params.id);
+  const outgoingTransactions = await transactionModel.getBySender$DateRange(req.params.id);
+  outgoingTransactions.map((e) => {
+    const amountValue = currency.EURO(e.amount).value;
+    e.amount = currency.EURO(-amountValue).format();
+  });
+
+
+  let allTransactions = incomingTransactions.concat(outgoingTransactions);
+  allTransactions.sort((a, b) => {
+    var c = new Date(a.date);
+    var d = new Date(b.date);
+    return d - c;
+  });
+  allTransactions.map((e) => e.amount = currency.EURO(e.amount).value)
+  return res.status(200).json(allTransactions);
+}
+
+
+const createStripeTransaction = async (paymentIntent, walletId) => {
+
+  const paymentMethod = await stripe.paymentMethods.retrieve(paymentIntent.payment_method);
+  const transaction = {
+    receiver: walletId,
+    stripeSender: paymentMethod.card.last4,
+    amount: currency.EURO(paymentIntent.amount / 100).format()
+  }
+  transactionModel.create(transaction);
+}
+
 module.exports = {
-  update,
-  getAll,
-  getOne,
-  remove,
+
   handleTransaction,
   getTransactionsBySender,
   getTransactionsByReceiver,
   getAllWalletTransactions,
   getBySenderLastWeek,
   getByReceiverLastWeek,
+  getByReceiverSenderLastWeek,
+  createStripeTransaction
 };

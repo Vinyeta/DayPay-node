@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const walletModel = require("./wallet.model");
 const TransactionsModel = require("../transactions/transactions.model");
+const transactionController = require('../transactions/transactions.controller')
 const currency = require("../../Utils/moneyFormating");
 
 const getOne = async (req, res) => {
@@ -86,8 +87,8 @@ const weeklyIncrement = async (req, res) => {
   const verifyWallet = await walletModel.getByUser(
     jwt.decode(req.headers.authorization.split(" ")[1])
   );
-
   if (verifyWallet._id == req.params.id) {
+
     const currentFunds = await walletModel.getOne({ _id: req.params.id });
     const outcomeTransactions = await TransactionsModel.getBySender$DateRange(
       req.params.id
@@ -113,23 +114,82 @@ const weeklyIncrement = async (req, res) => {
   }
 };
 
-const stripePayment = async (req, res) => {
-  const verifyWallet = await walletModel.getByUser(
-    jwt.decode(req.headers.authorization.split(" ")[1])
-  );
 
-  if (verifyWallet._id == req.params.id) {
-    const wallet = await walletModel.getOne(req.params.id);
-    const updatedBody = {
-      funds: currency.EURO(wallet.funds).add(req.body.amount).format(),
-    };
-    console.log(updatedBody.funds);
-    const updatedWallet = walletModel.updateOne(req.params.id, updatedBody);
-    return res.status(200).json(updatedWallet);
-  } else {
-    return res.status(401);
+const stripePayment = async (req, res) => {
+  try {
+    const verifyWallet = await walletModel.getByUser(
+      jwt.decode(req.headers.authorization.split(" ")[1])
+    );
+
+    if (verifyWallet._id == req.params.id) {
+      const wallet = await walletModel.getOne(req.params.id);
+
+      const updatedBody = {
+        "funds": currency.EURO(wallet.funds).add(req.body.paymentIntent.amount / 100).format()
+      }
+      console.log(updatedBody.funds);
+      const updatedWallet = walletModel.updateOne(req.params.id, updatedBody);
+      transactionController.createStripeTransaction(req.body.paymentIntent, req.params.id)
+      return res.status(200).json(updatedWallet);
+    }
+  } catch (err) {
+    console.log(err);
   }
-};
+}
+const walletHistogram = async (req, res) => {
+  try {
+    const verifyWallet = await walletModel.getByUser(
+      jwt.decode(req.headers.authorization.split(" ")[1])
+    );
+    if (!(verifyWallet._id == req.params.id)) return res.status(401).json('Unauthorized')
+    const currentFunds = await walletModel.getOne({ _id: req.params.id });
+    const outcomeTransactions = await TransactionsModel.getBySender$DateRange(req.params.id)
+    const incomeTransactions = await TransactionsModel.getByReceiver$DateRange(req.params.id)
+    outcomeTransactions.map((e) => {
+      const amountValue = currency.EURO(e.amount).value;
+      e.amount = currency.EURO(-amountValue).format();
+    });
+
+    let allTransactions = incomeTransactions.concat(outcomeTransactions);
+    allTransactions.sort((a, b) => {
+      var c = new Date(a.date);
+      var d = new Date(b.date);
+      return d - c;
+    });
+    let countingMoney = {
+      funds: currentFunds.funds,
+      date: new Date,
+    }
+    const walletMoney = [{
+      funds: currency.EURO(currentFunds.funds).value,
+      date: countingMoney.date.getDay()
+    }];
+
+    allTransactions.forEach((transaction) => {
+      if (transaction.date.getDay() === countingMoney.date.getDay()) {
+        countingMoney.funds = currency.EURO(countingMoney.funds).subtract(transaction.amount).format();
+      } else {
+        countingMoney.date.setDate(countingMoney.date.getDate() - 1);
+        walletMoney.push({
+          funds: currency.EURO(countingMoney.funds).value,
+          date: countingMoney.date.getDay()
+        });
+        countingMoney.funds = currency.EURO(countingMoney.funds).subtract(transaction.amount).format();
+      }
+    });
+    while (walletMoney.length < 7) {
+      countingMoney.date.setDate(countingMoney.date.getDate() - 1);
+      walletMoney.push({
+        funds: currency.EURO(countingMoney.funds).value,
+        date: countingMoney.date.getDay()
+      });
+    }
+    return res.status(200).json(walletMoney);
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 
 module.exports = {
   getOne,
@@ -139,4 +199,7 @@ module.exports = {
   getBalance,
   weeklyIncrement,
   stripePayment,
+  walletHistogram
 };
+
+
